@@ -1,3 +1,4 @@
+/** Progress — Horizontal bar for visualizing percentages (e.g. career scores). */
 import { cn } from "@/lib/utils";
 
 export function Progress({ value, max = 100, className, color }: {

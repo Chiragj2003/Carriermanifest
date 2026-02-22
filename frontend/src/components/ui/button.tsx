@@ -1,3 +1,4 @@
+/** Button — Reusable button component with variant and size props. */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 

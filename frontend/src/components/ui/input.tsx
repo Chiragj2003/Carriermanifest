@@ -1,3 +1,4 @@
+/** Input — Styled text input with focus ring and theme-aware colors. */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 

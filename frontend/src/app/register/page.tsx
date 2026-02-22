@@ -1,3 +1,8 @@
+/**
+ * Register Page — New user registration form with password validation.
+ *
+ * On success, auto-logs in via AuthProvider and redirects to /dashboard.
+ */
 "use client";
 
 import { useState } from "react";

@@ -1,3 +1,9 @@
+/**
+ * Dashboard Page — Shows user's assessment history, stats, and quick actions.
+ *
+ * Redirects unauthenticated users to /login.
+ * Fetches assessment list on mount and displays stats cards + history list.
+ */
 "use client";
 
 import { useEffect, useState } from "react";

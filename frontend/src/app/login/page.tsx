@@ -1,3 +1,8 @@
+/**
+ * Login Page — Email + password sign-in form.
+ *
+ * On success, stores JWT via AuthProvider and redirects to /dashboard.
+ */
 "use client";
 
 import { useState } from "react";

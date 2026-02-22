@@ -1,3 +1,4 @@
+/** Card — Composable card component (Card, CardHeader, CardTitle, CardDescription, CardContent). */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 

@@ -1,3 +1,12 @@
+/**
+ * Assessment Page — Interactive quiz with 30 career-oriented questions.
+ *
+ * Features:
+ * - Category-grouped questions with progress bar
+ * - Animated radio-button options with keyboard & touch support
+ * - Navigation dots for quick question jumping
+ * - Auto-scrolls to first unanswered on submit attempt
+ */
 "use client";
 
 import { useEffect, useState } from "react";

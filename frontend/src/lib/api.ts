@@ -1,3 +1,9 @@
+/**
+ * API Client — Axios instance pre-configured for the CareerManifest backend.
+ *
+ * Includes automatic JWT token injection via request interceptor.
+ * Exports typed API modules: authAPI, assessmentAPI, questionsAPI, adminAPI.
+ */
 import axios from "axios";
 
 // API client configured for the CareerManifest backend.

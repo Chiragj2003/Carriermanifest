@@ -1,3 +1,9 @@
+/**
+ * Type Definitions — Shared TypeScript interfaces for the CareerManifest app.
+ *
+ * Covers: User, Question, Assessment, Results (scores, risk, salary, roadmap).
+ */
+
 // Type definitions for CareerManifest frontend
 
 export interface User {

@@ -1,3 +1,14 @@
+/**
+ * Admin Page — Manages question bank and displays platform analytics.
+ *
+ * Features:
+ * - Stats dashboard (users, assessments, questions, career paths)
+ * - Career & risk distribution charts
+ * - Question CRUD with JSON editor modal (bottom-sheet on mobile)
+ * - Category filter for question bank
+ *
+ * Access: Admin-role users only; redirects others to /dashboard.
+ */
 "use client";
 
 import { useEffect, useState, useCallback } from "react";

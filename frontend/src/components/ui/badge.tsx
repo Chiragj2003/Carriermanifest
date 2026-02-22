@@ -1,3 +1,4 @@
+/** Badge — Small label with color variants (default, secondary, success, warning, destructive, outline). */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 

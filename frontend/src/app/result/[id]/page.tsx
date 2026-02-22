@@ -1,3 +1,13 @@
+/**
+ * Result Page — Displays detailed assessment results including:
+ * - Best career path hero card
+ * - Score breakdown per career category with progress bars
+ * - Risk assessment with weighted factor breakdown
+ * - 5-year salary projection chart
+ * - Step-by-step preparation roadmap
+ * - Required skills, exams, and suggested institutions
+ * - AI-powered personalized explanation (Groq LLM)
+ */
 "use client";
 
 import { useEffect, useState } from "react";

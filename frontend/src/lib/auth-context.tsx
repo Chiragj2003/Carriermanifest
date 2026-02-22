@@ -1,3 +1,9 @@
+/**
+ * Auth Context — Provides JWT-based authentication state to the entire app.
+ *
+ * Stores token + user in localStorage. On mount, verifies the saved token
+ * by calling GET /auth/me. Exposes login(), logout(), and user/isAdmin state.
+ */
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
