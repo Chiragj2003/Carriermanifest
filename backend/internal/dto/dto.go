@@ -18,6 +18,11 @@ type LoginRequest struct {
 	Password string `json:"password" binding:"required"`
 }
 
+// GoogleLoginRequest is the payload for Google OAuth sign-in.
+type GoogleLoginRequest struct {
+	Credential string `json:"credential" binding:"required"`
+}
+
 // AuthResponse is returned after successful login/register.
 type AuthResponse struct {
 	Token string   `json:"token"`

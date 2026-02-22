@@ -309,12 +309,19 @@ export default function AssessmentPage() {
       )}
 
       {/* Navigation */}
-      <div className="flex items-center justify-between">
-        <Button variant="outline" onClick={handlePrev} disabled={currentIndex === 0}>
-          ← Previous
+      <div className="flex items-center justify-between gap-2">
+        <Button variant="outline" onClick={handlePrev} disabled={currentIndex === 0} className="min-h-[44px] px-3 sm:px-4">
+          ← <span className="hidden sm:inline ml-1">Previous</span>
         </Button>
 
         <div className="flex gap-2">
+          {/* Mobile: show question counter */}
+          <div className="flex md:hidden items-center gap-1">
+            <span className="text-xs text-muted-foreground font-medium">
+              {currentIndex + 1}/{questions.length}
+            </span>
+          </div>
+          {/* Desktop: show navigation dots */}
           <div className="hidden md:flex items-center gap-1">
             {questions.map((q, i) => (
               <button
@@ -335,14 +342,19 @@ export default function AssessmentPage() {
         </div>
 
         {currentIndex === questions.length - 1 ? (
-          <Button onClick={handleSubmit} disabled={submitting || answeredCount < questions.length}>
-            {submitting ? "Analyzing..." : "Submit Assessment ✨"}
+          <Button onClick={handleSubmit} disabled={submitting || answeredCount < questions.length} className="min-h-[44px] px-3 sm:px-4">
+            {submitting ? "Analyzing..." : <><span className="hidden sm:inline">Submit Assessment</span><span className="sm:hidden">Submit</span> ✨</>}
           </Button>
         ) : (
-          <Button onClick={handleNext} disabled={!isAnswered}>
+          <Button onClick={handleNext} disabled={!isAnswered} className="min-h-[44px] px-3 sm:px-4">
             Next →
           </Button>
         )}
+      </div>
+
+      {/* Mobile swipe hint */}
+      <div className="md:hidden text-center mt-4">
+        <p className="text-xs text-muted-foreground">Tap an option to select, then tap Next</p>
       </div>
     </div>
   );

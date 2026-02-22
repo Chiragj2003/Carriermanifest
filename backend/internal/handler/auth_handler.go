@@ -70,6 +70,27 @@ func (h *AuthHandler) Profile(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// GoogleLogin handles POST /api/auth/google
+func (h *AuthHandler) GoogleLogin(c *gin.Context) {
+	var req dto.GoogleLoginRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, dto.ErrorResponse{Error: "Validation failed", Message: err.Error()})
+		return
+	}
+
+	resp, err := h.authService.GoogleLogin(req)
+	if err != nil {
+		status := http.StatusUnauthorized
+		if err.Error() == "invalid Google token" || err.Error() == "Google token audience mismatch" {
+			status = http.StatusUnauthorized
+		}
+		c.JSON(status, dto.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}
+
 // GetUserID extracts user_id from Gin context (set by auth middleware).
 func GetUserID(c *gin.Context) uint64 {
 	id, _ := c.Get("user_id")

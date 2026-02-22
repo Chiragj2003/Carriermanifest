@@ -52,7 +52,7 @@ func getAllQuestions() []QuestionSeed {
 		// ============================================================
 		{
 			Category:     "academic",
-			QuestionText: "What were your 10th standard marks/percentage?",
+			QuestionText: "How did you perform in your 10th board exams?",
 			Options: []dto.QuestionOption{
 				{Label: "Below 60%", Value: 0},
 				{Label: "60-75%", Value: 1},
@@ -71,7 +71,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "academic",
-			QuestionText: "What was your 12th standard stream?",
+			QuestionText: "What stream did you pick in 11th/12th?",
 			Options: []dto.QuestionOption{
 				{Label: "PCM (Physics, Chemistry, Maths)", Value: 0},
 				{Label: "PCB (Physics, Chemistry, Biology)", Value: 1},
@@ -90,7 +90,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "academic",
-			QuestionText: "What is your graduation branch/field?",
+			QuestionText: "What are you studying (or did you study) in college?",
 			Options: []dto.QuestionOption{
 				{Label: "Computer Science / IT", Value: 0},
 				{Label: "Other Engineering (Mech/Civil/ECE/EEE)", Value: 1},
@@ -109,7 +109,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "academic",
-			QuestionText: "What is your current CGPA / percentage?",
+			QuestionText: "How are your college grades looking?",
 			Options: []dto.QuestionOption{
 				{Label: "Below 6.0 / 55%", Value: 0},
 				{Label: "6.0-7.0 / 55-65%", Value: 1},
@@ -128,7 +128,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "academic",
-			QuestionText: "Have you attempted any competitive exams?",
+			QuestionText: "Have you taken any competitive exams so far?",
 			Options: []dto.QuestionOption{
 				{Label: "No, never", Value: 0},
 				{Label: "JEE / NEET (engineering/medical entrance)", Value: 1},
@@ -147,7 +147,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "academic",
-			QuestionText: "How would you rate your coding/technical skills?",
+			QuestionText: "How comfortable are you with coding and tech?",
 			Options: []dto.QuestionOption{
 				{Label: "No coding knowledge", Value: 0},
 				{Label: "Basic (know one language)", Value: 1},
@@ -166,7 +166,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "academic",
-			QuestionText: "What is your English proficiency level?",
+			QuestionText: "How confident are you with English?",
 			Options: []dto.QuestionOption{
 				{Label: "Basic (can read/write simple sentences)", Value: 0},
 				{Label: "Intermediate (comfortable in conversation)", Value: 1},
@@ -183,7 +183,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "academic",
-			QuestionText: "Do you have any work experience or internships?",
+			QuestionText: "Have you done any internships or jobs so far?",
 			Options: []dto.QuestionOption{
 				{Label: "No experience", Value: 0},
 				{Label: "1-2 internships", Value: 1},
@@ -204,7 +204,7 @@ func getAllQuestions() []QuestionSeed {
 		// ============================================================
 		{
 			Category:     "financial",
-			QuestionText: "Are you currently repaying an education loan?",
+			QuestionText: "Do you have any education loan to repay?",
 			Options: []dto.QuestionOption{
 				{Label: "No loan", Value: 0},
 				{Label: "Small loan (under ₹5 lakh)", Value: 1},
@@ -221,7 +221,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "financial",
-			QuestionText: "How many family members depend on your future income?",
+			QuestionText: "How many people in your family will depend on your income?",
 			Options: []dto.QuestionOption{
 				{Label: "None (financially independent family)", Value: 0},
 				{Label: "1-2 members", Value: 1},
@@ -238,7 +238,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "financial",
-			QuestionText: "Do you need a job/income within the next 1 year?",
+			QuestionText: "How soon do you need to start earning?",
 			Options: []dto.QuestionOption{
 				{Label: "No urgency, can study/prepare for 2-3 years", Value: 0},
 				{Label: "Preferably within 1 year but flexible", Value: 1},
@@ -255,7 +255,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "financial",
-			QuestionText: "Can your family afford MBA fees (₹20 lakh+)?",
+			QuestionText: "Could your family manage MBA-level fees (₹20 lakh+)?",
 			Options: []dto.QuestionOption{
 				{Label: "Yes, comfortably", Value: 0},
 				{Label: "Yes, with some financial strain", Value: 1},
@@ -272,7 +272,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "financial",
-			QuestionText: "What is your family's annual household income?",
+			QuestionText: "What's your family's approximate annual income?",
 			Options: []dto.QuestionOption{
 				{Label: "Below ₹3 lakh", Value: 0},
 				{Label: "₹3-8 lakh", Value: 1},
@@ -291,7 +291,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "financial",
-			QuestionText: "Are you from a rural or urban background?",
+			QuestionText: "Where did you grow up?",
 			Options: []dto.QuestionOption{
 				{Label: "Rural / small town", Value: 0},
 				{Label: "Tier-2/3 city", Value: 1},
@@ -312,7 +312,7 @@ func getAllQuestions() []QuestionSeed {
 		// ============================================================
 		{
 			Category:     "personality",
-			QuestionText: "How would you describe your risk tolerance?",
+			QuestionText: "How do you feel about taking risks in your career?",
 			Options: []dto.QuestionOption{
 				{Label: "Very risk-averse (prefer guaranteed outcomes)", Value: 0},
 				{Label: "Low risk (small calculated risks only)", Value: 1},
@@ -331,7 +331,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "personality",
-			QuestionText: "Are you interested in leadership and managing people?",
+			QuestionText: "Do you see yourself leading and managing teams?",
 			Options: []dto.QuestionOption{
 				{Label: "No, I prefer individual work", Value: 0},
 				{Label: "Somewhat, in small teams", Value: 1},
@@ -348,7 +348,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "personality",
-			QuestionText: "Do you prefer stability or growth in your career?",
+			QuestionText: "What matters more to you — job security or fast growth?",
 			Options: []dto.QuestionOption{
 				{Label: "Strong stability (pension, job security)", Value: 0},
 				{Label: "Stability with moderate growth", Value: 1},
@@ -365,7 +365,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "personality",
-			QuestionText: "How do you handle stress and pressure?",
+			QuestionText: "How do you deal with pressure and tight deadlines?",
 			Options: []dto.QuestionOption{
 				{Label: "I avoid stressful situations", Value: 0},
 				{Label: "I manage but prefer low-stress", Value: 1},
@@ -382,7 +382,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "personality",
-			QuestionText: "How important is work-life balance to you?",
+			QuestionText: "How important is having free time outside of work?",
 			Options: []dto.QuestionOption{
 				{Label: "Extremely important (9-to-5 preferred)", Value: 0},
 				{Label: "Important but flexible", Value: 1},
@@ -399,7 +399,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "personality",
-			QuestionText: "Do you enjoy solving complex problems or following processes?",
+			QuestionText: "Do you prefer solving new problems or following proven methods?",
 			Options: []dto.QuestionOption{
 				{Label: "Prefer following established processes", Value: 0},
 				{Label: "Mix of both", Value: 1},
@@ -416,7 +416,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "personality",
-			QuestionText: "How do you feel about continuous learning and upskilling?",
+			QuestionText: "How do you feel about constantly learning new things?",
 			Options: []dto.QuestionOption{
 				{Label: "Prefer to learn once and apply", Value: 0},
 				{Label: "Open to occasional learning", Value: 1},
@@ -433,7 +433,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "personality",
-			QuestionText: "How comfortable are you with public speaking and presentations?",
+			QuestionText: "How do you feel about speaking in front of people?",
 			Options: []dto.QuestionOption{
 				{Label: "Very uncomfortable", Value: 0},
 				{Label: "Nervous but can manage", Value: 1},
@@ -454,7 +454,7 @@ func getAllQuestions() []QuestionSeed {
 		// ============================================================
 		{
 			Category:     "career_interest",
-			QuestionText: "How interested are you in a government job (IAS/IPS/Banking/PSU)?",
+			QuestionText: "How much does a government job (IAS/IPS/Banking) appeal to you?",
 			Options: []dto.QuestionOption{
 				{Label: "Not interested at all", Value: 0},
 				{Label: "Slightly interested", Value: 1},
@@ -473,7 +473,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "career_interest",
-			QuestionText: "How interested are you in starting your own business/startup?",
+			QuestionText: "Have you thought about starting your own business?",
 			Options: []dto.QuestionOption{
 				{Label: "Not interested", Value: 0},
 				{Label: "Maybe someday", Value: 1},
@@ -492,7 +492,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "career_interest",
-			QuestionText: "How interested are you in a corporate/MNC job?",
+			QuestionText: "How excited are you about working at a big company or MNC?",
 			Options: []dto.QuestionOption{
 				{Label: "Not interested", Value: 0},
 				{Label: "As a backup option", Value: 1},
@@ -509,7 +509,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "career_interest",
-			QuestionText: "Are you interested in higher studies (Masters/PhD) in India?",
+			QuestionText: "Would you like to pursue Masters or PhD in India?",
 			Options: []dto.QuestionOption{
 				{Label: "No", Value: 0},
 				{Label: "Maybe after some work experience", Value: 1},
@@ -526,7 +526,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "career_interest",
-			QuestionText: "Are you interested in studying or working abroad?",
+			QuestionText: "Do you dream of studying or working outside India?",
 			Options: []dto.QuestionOption{
 				{Label: "No, I want to stay in India", Value: 0},
 				{Label: "Open to it but not actively pursuing", Value: 1},
@@ -543,7 +543,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "career_interest",
-			QuestionText: "What salary range do you expect in your first job?",
+			QuestionText: "What kind of starting salary would make you happy?",
 			Options: []dto.QuestionOption{
 				{Label: "₹2-4 LPA (just need a job)", Value: 0},
 				{Label: "₹4-8 LPA (decent start)", Value: 1},
@@ -562,7 +562,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "career_interest",
-			QuestionText: "Which industry excites you the most?",
+			QuestionText: "Which field gets you the most excited?",
 			Options: []dto.QuestionOption{
 				{Label: "Technology / Software", Value: 0},
 				{Label: "Finance / Banking / Consulting", Value: 1},
@@ -581,7 +581,7 @@ func getAllQuestions() []QuestionSeed {
 		},
 		{
 			Category:     "career_interest",
-			QuestionText: "Where do you see yourself in 10 years?",
+			QuestionText: "Imagine yourself 10 years from now — what do you see?",
 			Options: []dto.QuestionOption{
 				{Label: "Senior engineer at a top tech company", Value: 0},
 				{Label: "Business leader / VP at a corporation", Value: 1},

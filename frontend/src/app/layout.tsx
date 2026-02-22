@@ -10,6 +10,7 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
 import { ThemeProvider } from "@/lib/theme-context";
 import { Navbar } from "@/components/navbar";
+import { GoogleOAuthWrapper } from "@/components/google-oauth-wrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,6 +34,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider>
+          <GoogleOAuthWrapper>
           <AuthProvider>
             <div className="min-h-screen flex flex-col">
               <Navbar />
@@ -45,6 +47,7 @@ export default function RootLayout({
               </footer>
             </div>
           </AuthProvider>
+          </GoogleOAuthWrapper>
         </ThemeProvider>
       </body>
     </html>

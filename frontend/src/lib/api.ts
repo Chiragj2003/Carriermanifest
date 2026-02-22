@@ -46,6 +46,8 @@ export const authAPI = {
     api.post("/api/auth/register", data),
   login: (data: { email: string; password: string }) =>
     api.post("/api/auth/login", data),
+  googleLogin: (credential: string) =>
+    api.post("/api/auth/google", { credential }),
   getProfile: () => api.get("/api/auth/profile"),
 };
 

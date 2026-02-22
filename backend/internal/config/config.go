@@ -30,6 +30,9 @@ type Config struct {
 	LLMApiKey   string
 	LLMModel    string
 
+	// Google OAuth
+	GoogleClientID string
+
 	// Admin
 	AdminEmail    string
 	AdminPassword string
@@ -56,6 +59,8 @@ func Load() (*Config, error) {
 		LLMProvider: getEnv("LLM_PROVIDER", ""),
 		LLMApiKey:   getEnv("LLM_API_KEY", ""),
 		LLMModel:    getEnv("LLM_MODEL", ""),
+
+		GoogleClientID: getEnv("GOOGLE_CLIENT_ID", ""),
 
 		AdminEmail:    getEnv("ADMIN_EMAIL", "admin@careermanifest.in"),
 		AdminPassword: getEnv("ADMIN_PASSWORD", "Admin@123"),

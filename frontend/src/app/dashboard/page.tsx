@@ -54,36 +54,36 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-10">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+    <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">Welcome back, {user.name}!</h1>
-          <p className="text-muted-foreground mt-1">Your career discovery dashboard</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">Welcome back, {user.name}!</h1>
+          <p className="text-muted-foreground text-sm sm:text-base mt-1">Your career discovery dashboard</p>
         </div>
         <Link href="/assessment" className="w-full sm:w-auto">
-          <Button size="lg" className="w-full sm:w-auto">Take New Assessment →</Button>
+          <Button size="lg" className="w-full sm:w-auto min-h-[44px] active:scale-[0.98] transition-transform">Take New Assessment →</Button>
         </Link>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Total Assessments</CardDescription>
-            <CardTitle className="text-4xl">{assessments.length}</CardTitle>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-10">
+        <Card className="hover:shadow-md transition-shadow">
+          <CardHeader className="pb-2 p-4 sm:p-6">
+            <CardDescription className="text-xs sm:text-sm">Total Assessments</CardDescription>
+            <CardTitle className="text-3xl sm:text-4xl">{assessments.length}</CardTitle>
           </CardHeader>
         </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Latest Career Match</CardDescription>
-            <CardTitle className="text-lg">
+        <Card className="hover:shadow-md transition-shadow">
+          <CardHeader className="pb-2 p-4 sm:p-6">
+            <CardDescription className="text-xs sm:text-sm">Latest Career Match</CardDescription>
+            <CardTitle className="text-base sm:text-lg">
               {assessments.length > 0 ? assessments[0].best_career_path : "Take your first assessment"}
             </CardTitle>
           </CardHeader>
         </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Risk Level</CardDescription>
+        <Card className="hover:shadow-md transition-shadow">
+          <CardHeader className="pb-2 p-4 sm:p-6">
+            <CardDescription className="text-xs sm:text-sm">Risk Level</CardDescription>
             <CardTitle>
               {assessments.length > 0 ? (
                 <Badge variant={riskBadgeVariant(assessments[0].risk_level)} className="text-base px-3 py-1">

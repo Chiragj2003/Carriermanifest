@@ -1,5 +1,5 @@
 /**
- * Register Page — New user registration form with password validation.
+ * Register Page — New user registration form with Google OAuth option.
  *
  * On success, auto-logs in via AuthProvider and redirects to /dashboard.
  * Redirects already-authenticated users to /dashboard automatically.
@@ -14,6 +14,7 @@ import { authAPI } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -59,6 +60,20 @@ export default function RegisterPage() {
     }
   };
 
+  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+    setError("");
+    setLoading(true);
+    try {
+      const res = await authAPI.googleLogin(credentialResponse.credential!);
+      login(res.data.token, res.data.user);
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Google sign-up failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Don't render form while checking auth
   if (isLoading || user) {
     return (
@@ -82,6 +97,29 @@ export default function RegisterPage() {
           <CardDescription>Start your career discovery journey</CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Google Sign-Up */}
+          <div className="flex justify-center mb-4">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError("Google sign-up failed. Please try again.")}
+              theme="outline"
+              size="large"
+              width="350"
+              text="signup_with"
+              shape="rectangular"
+            />
+          </div>
+
+          {/* Divider */}
+          <div className="relative my-5">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-3 text-muted-foreground">or register with email</span>
+            </div>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm border border-destructive/20">

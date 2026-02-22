@@ -1,5 +1,5 @@
 /**
- * Login Page — Email + password sign-in form.
+ * Login Page — Email + password sign-in form with Google OAuth.
  *
  * On success, stores JWT via AuthProvider and redirects to /dashboard.
  * Redirects already-authenticated users to /dashboard automatically.
@@ -14,6 +14,7 @@ import { authAPI } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -46,6 +47,20 @@ export default function LoginPage() {
     }
   };
 
+  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+    setError("");
+    setLoading(true);
+    try {
+      const res = await authAPI.googleLogin(credentialResponse.credential!);
+      login(res.data.token, res.data.user);
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Google sign-in failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Don't render form while checking auth
   if (isLoading || user) {
     return (
@@ -69,6 +84,29 @@ export default function LoginPage() {
           <CardDescription>Sign in to your CareerManifest account</CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Google Sign-In */}
+          <div className="flex justify-center mb-4">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError("Google sign-in failed. Please try again.")}
+              theme="outline"
+              size="large"
+              width="350"
+              text="signin_with"
+              shape="rectangular"
+            />
+          </div>
+
+          {/* Divider */}
+          <div className="relative my-5">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-3 text-muted-foreground">or continue with email</span>
+            </div>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm border border-destructive/20">
