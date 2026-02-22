@@ -53,9 +53,9 @@ function QuestionModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <Card className="w-full max-w-2xl max-h-[90vh] overflow-auto m-4">
-        <CardHeader>
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50">
+      <Card className="w-full sm:max-w-2xl max-h-[85vh] sm:max-h-[90vh] overflow-auto sm:m-4 rounded-b-none sm:rounded-b-lg">
+        <CardHeader className="px-4 sm:px-6">
           <CardTitle>{isNew ? "Add Question" : "Edit Question"}</CardTitle>
           <CardDescription>
             {isNew ? "Create a new assessment question" : `Editing question #${question?.id}`}
@@ -191,9 +191,9 @@ export default function AdminPage() {
 
   return (
     <div className="container mx-auto px-4 py-10 max-w-6xl">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Admin Panel</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Admin Panel</h1>
           <p className="text-muted-foreground">Manage questions & view analytics</p>
         </div>
       </div>
@@ -279,12 +279,12 @@ export default function AdminPage() {
       {/* Questions Management */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between flex-wrap gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
             <div>
               <CardTitle>Question Bank</CardTitle>
               <CardDescription>{questions.length} questions total</CardDescription>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
               <select
                 value={filterSection}
                 onChange={(e) => setFilterSection(e.target.value)}

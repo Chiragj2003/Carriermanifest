@@ -116,14 +116,14 @@ export default function AssessmentPage() {
   const answeredCount = Object.keys(answers).length;
 
   return (
-    <div className="container mx-auto px-4 py-10 max-w-3xl">
+    <div className="container mx-auto px-4 py-6 sm:py-10 max-w-3xl">
       {/* Progress Header */}
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-muted-foreground">
+          <span className="text-xs sm:text-sm text-muted-foreground">
             Question {currentIndex + 1} of {questions.length}
           </span>
-          <span className="text-sm font-medium">
+          <span className="text-xs sm:text-sm font-medium">
             {answeredCount}/{questions.length} answered
           </span>
         </div>
@@ -139,20 +139,20 @@ export default function AssessmentPage() {
       </div>
 
       {/* Question Card */}
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle className="text-xl leading-relaxed">
+      <Card className="mb-4 sm:mb-6">
+        <CardHeader className="px-4 sm:px-6">
+          <CardTitle className="text-lg sm:text-xl leading-relaxed">
             {currentQuestion.question_text}
           </CardTitle>
           <CardDescription>Select one option</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className="space-y-2 sm:space-y-3 px-4 sm:px-6">
           {currentQuestion.options.map((option, index) => (
             <button
               key={index}
               onClick={() => handleSelect(index)}
               className={cn(
-                "w-full text-left p-4 rounded-lg border-2 transition-all duration-200",
+                "w-full text-left p-3 sm:p-4 rounded-lg border-2 transition-all duration-200 active:scale-[0.98]",
                 answers[currentQuestion.id] === index
                   ? "border-primary bg-primary/5 ring-2 ring-primary/20"
                   : "border-border hover:border-primary/50 hover:bg-accent/50"

@@ -19,14 +19,14 @@ export default function HomePage() {
             AI-powered career assessment designed specifically for Indian students.
             Get personalized recommendations based on your academics, finances, personality, and goals.
           </p>
-          <div className="flex gap-4 justify-center">
-            <Link href="/register">
-              <Button size="lg" className="text-lg px-8 py-6">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
+            <Link href="/register" className="w-full sm:w-auto">
+              <Button size="lg" className="text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 w-full">
                 Start Free Assessment →
               </Button>
             </Link>
-            <Link href="/login">
-              <Button variant="outline" size="lg" className="text-lg px-8 py-6">
+            <Link href="/login" className="w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 w-full">
                 Login
               </Button>
             </Link>
@@ -35,9 +35,9 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white">
+      <section className="py-12 md:py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">How CareerManifest Works</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">How CareerManifest Works</h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <Card className="text-center p-6">
               <CardHeader>
@@ -79,9 +79,9 @@ export default function HomePage() {
       </section>
 
       {/* Career Categories */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-12 md:py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Career Paths We Analyze</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">Career Paths We Analyze</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {[
               { emoji: "💻", title: "IT / Software Jobs", desc: "TCS to Google" },
@@ -102,9 +102,9 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-primary text-primary-foreground">
+      <section className="py-12 md:py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6">Ready to Find Your Career Path?</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Ready to Find Your Career Path?</h2>
           <p className="text-lg opacity-90 mb-8 max-w-xl mx-auto">
             Join thousands of Indian students who have discovered their ideal career through CareerManifest.
           </p>

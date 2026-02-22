@@ -49,13 +49,13 @@ export default function DashboardPage() {
 
   return (
     <div className="container mx-auto px-4 py-10">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Welcome back, {user.name}!</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Welcome back, {user.name}!</h1>
           <p className="text-muted-foreground mt-1">Your career discovery dashboard</p>
         </div>
-        <Link href="/assessment">
-          <Button size="lg">Take New Assessment →</Button>
+        <Link href="/assessment" className="w-full sm:w-auto">
+          <Button size="lg" className="w-full sm:w-auto">Take New Assessment →</Button>
         </Link>
       </div>
 
@@ -119,12 +119,12 @@ export default function DashboardPage() {
                   href={`/result/${a.id}`}
                   className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
+                  <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold flex-shrink-0">
                       #{a.id}
                     </div>
-                    <div>
-                      <p className="font-medium">{a.best_career_path}</p>
+                    <div className="min-w-0">
+                      <p className="font-medium truncate">{a.best_career_path}</p>
                       <p className="text-sm text-muted-foreground">
                         {new Date(a.created_at).toLocaleDateString("en-IN", {
                           day: "numeric", month: "long", year: "numeric"

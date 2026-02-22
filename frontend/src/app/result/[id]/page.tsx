@@ -66,10 +66,10 @@ export default function ResultPage() {
   const riskVariant = result.risk.level === "Low" ? "success" : result.risk.level === "Medium" ? "warning" : "destructive";
 
   return (
-    <div className="container mx-auto px-4 py-10 max-w-5xl">
+    <div className="container mx-auto px-4 py-6 sm:py-10 max-w-5xl">
       {/* Header */}
-      <div className="text-center mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold mb-2">
+      <div className="text-center mb-6 sm:mb-10">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
           Your CareerManifest Results
         </h1>
         <p className="text-muted-foreground">
@@ -80,10 +80,10 @@ export default function ResultPage() {
       </div>
 
       {/* Best Career Path Hero */}
-      <Card className="mb-8 bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
-        <CardContent className="p-8 text-center">
+      <Card className="mb-6 sm:mb-8 bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+        <CardContent className="p-4 sm:p-8 text-center">
           <p className="text-sm text-muted-foreground uppercase tracking-wider mb-2">Your Best Career Path</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
+          <h2 className="text-xl sm:text-3xl md:text-4xl font-bold text-primary mb-4">
             {result.best_career_path}
           </h2>
           <div className="flex items-center justify-center gap-4 flex-wrap">
@@ -133,7 +133,7 @@ export default function ResultPage() {
           <CardDescription>Based on your financial and personal situation</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6">
             {Object.entries(result.risk.factors).map(([factor, value]) => (
               <div key={factor} className="text-center p-4 rounded-lg bg-muted/50">
                 <p className="text-xs text-muted-foreground capitalize mb-1">
@@ -163,7 +163,7 @@ export default function ResultPage() {
           <CardDescription>Expected salary growth for {result.best_career_path}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-5 gap-2 md:gap-4">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 md:gap-4">
             {[
               { year: "Year 1", salary: result.salary_projection.year_1 },
               { year: "Year 2", salary: result.salary_projection.year_2 },
@@ -290,12 +290,12 @@ export default function ResultPage() {
       )}
 
       {/* Actions */}
-      <div className="flex items-center justify-center gap-4">
-        <Link href="/dashboard">
-          <Button variant="outline">← Back to Dashboard</Button>
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+        <Link href="/dashboard" className="w-full sm:w-auto">
+          <Button variant="outline" className="w-full">← Back to Dashboard</Button>
         </Link>
-        <Link href="/assessment">
-          <Button>Take Another Assessment</Button>
+        <Link href="/assessment" className="w-full sm:w-auto">
+          <Button className="w-full">Take Another Assessment</Button>
         </Link>
       </div>
     </div>
