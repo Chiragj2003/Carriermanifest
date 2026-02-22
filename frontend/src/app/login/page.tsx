@@ -2,10 +2,11 @@
  * Login Page — Email + password sign-in form.
  *
  * On success, stores JWT via AuthProvider and redirects to /dashboard.
+ * Redirects already-authenticated users to /dashboard automatically.
  */
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
@@ -19,8 +20,15 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { user, isLoading, login } = useAuth();
   const router = useRouter();
+
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.push("/dashboard");
+    }
+  }, [user, isLoading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,17 +46,32 @@ export default function LoginPage() {
     }
   };
 
+  // Don't render form while checking auth
+  if (isLoading || user) {
+    return (
+      <div className="flex items-center justify-center min-h-[80vh]">
+        <div className="animate-pulse text-muted-foreground">Loading...</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
+    <div className="min-h-[80vh] flex items-center justify-center px-4 relative">
+      {/* Decorative background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/10 pointer-events-none" />
+
+      <Card className="w-full max-w-md relative z-10 shadow-xl border-primary/10">
+        <CardHeader className="text-center pb-2">
+          <div className="mx-auto mb-3 h-14 w-14 rounded-2xl bg-primary flex items-center justify-center shadow-lg">
+            <span className="text-primary-foreground font-bold text-xl">CM</span>
+          </div>
           <CardTitle className="text-2xl">Welcome Back</CardTitle>
           <CardDescription>Sign in to your CareerManifest account</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="p-3 rounded-md bg-destructive/10 text-destructive text-sm">
+              <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm border border-destructive/20">
                 {error}
               </div>
             )}
@@ -61,6 +84,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="h-11"
               />
             </div>
             <div className="space-y-2">
@@ -72,10 +96,11 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="h-11"
               />
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Signing in..." : "Sign In"}
+            <Button type="submit" className="w-full h-11 text-base shadow-md shadow-primary/20" disabled={loading}>
+              {loading ? "Signing in..." : "Sign In →"}
             </Button>
           </form>
           <p className="text-center text-sm text-muted-foreground mt-6">
