@@ -1,20 +1,17 @@
 /**
- * Result Page — Displays detailed assessment results including:
- * - Best career path hero card
- * - Score breakdown per career category with progress bars
- * - Risk assessment with weighted factor breakdown
- * - 5-year salary projection chart
- * - Step-by-step preparation roadmap
- * - Required skills, exams, and suggested institutions
- * - AI-powered personalized explanation (Groq LLM)
+ * Result Page — Comprehensive assessment results with:
+ * - "How This Works" explainer section
+ * - Basic scoring results (works without AI)
+ * - AI-powered deep analysis (when available)
+ * - Interactive AI chatbot for follow-up questions
  */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
-import { assessmentAPI } from "@/lib/api";
+import { assessmentAPI, chatAPI } from "@/lib/api";
 import { AssessmentResponse } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,6 +29,16 @@ const careerColors: Record<string, string> = {
   "MS Abroad": "bg-cyan-500",
 };
 
+// Simple explanations for each career path
+const careerExplanations: Record<string, string> = {
+  "IT / Software Jobs": "This path is ideal if you enjoy problem-solving, coding, and technology. India's IT industry offers strong salaries even at entry level, and you can start earning within 4 years of graduation.",
+  "MBA (India)": "MBA suits you if you're interested in business, management, and leadership. After 2 years of MBA from a good college, you can land roles in consulting, marketing, or finance with excellent pay.",
+  "Government Exams": "Government jobs offer stability, pension, and social respect. If you're disciplined and good at studying for competitive exams like UPSC, SSC, or banking, this could be your path.",
+  "Startup / Entrepreneurship": "If you have a business idea and high risk tolerance, entrepreneurship can be very rewarding. It requires patience, creativity, and the ability to handle uncertainty.",
+  "Higher Studies (India)": "Pursuing M.Tech, PhD, or specialized courses in India is great if you love research and deep learning. GATE, NET, and other exams open doors to top institutes.",
+  "MS Abroad": "Studying abroad (MS in USA/Europe) gives you global exposure, higher salaries, and cutting-edge research opportunities. It requires good GRE/IELTS scores and financial planning.",
+};
+
 export default function ResultPage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
@@ -39,6 +46,16 @@ export default function ResultPage() {
   const [data, setData] = useState<AssessmentResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
+
+  // Chatbot state
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatMessages, setChatMessages] = useState<{ role: "user" | "bot"; text: string }[]>([
+    { role: "bot", text: "Hi! I'm your AI career assistant. Ask me anything about your results — exams to prepare, colleges to target, salary expectations, or next steps!" },
+  ]);
+  const [chatInput, setChatInput] = useState("");
+  const [chatLoading, setChatLoading] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -53,6 +70,27 @@ export default function ResultPage() {
         .finally(() => setLoading(false));
     }
   }, [user, isLoading, router, params.id]);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatMessages]);
+
+  const handleChatSend = async () => {
+    if (!chatInput.trim() || chatLoading || !data) return;
+    const msg = chatInput.trim();
+    setChatInput("");
+    setChatMessages((prev) => [...prev, { role: "user", text: msg }]);
+    setChatLoading(true);
+
+    try {
+      const res = await chatAPI.send(msg, data.id);
+      setChatMessages((prev) => [...prev, { role: "bot", text: res.data.reply }]);
+    } catch {
+      setChatMessages((prev) => [...prev, { role: "bot", text: "Sorry, I couldn't process that. Please try again." }]);
+    } finally {
+      setChatLoading(false);
+    }
+  };
 
   if (isLoading || loading) {
     return (
@@ -74,6 +112,7 @@ export default function ResultPage() {
 
   const result = data.result;
   const riskVariant = result.risk.level === "Low" ? "success" : result.risk.level === "Medium" ? "warning" : "destructive";
+  const bestExplanation = careerExplanations[result.best_career_path] || "This career path aligns well with your skills, interests, and financial situation based on your assessment answers.";
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-10 max-w-5xl">
@@ -89,13 +128,74 @@ export default function ResultPage() {
         </p>
       </div>
 
+      {/* ═══════════════════════════════════════════════════
+          HOW THIS ASSESSMENT WORKS (expandable section)
+          ═══════════════════════════════════════════════════ */}
+      <Card className="mb-6 border-dashed">
+        <button
+          onClick={() => setShowHowItWorks(!showHowItWorks)}
+          className="w-full text-left"
+        >
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                💡 How This Assessment Works
+              </CardTitle>
+              <span className="text-muted-foreground text-lg">{showHowItWorks ? "▲" : "▼"}</span>
+            </div>
+            {!showHowItWorks && (
+              <CardDescription>Click to learn how we calculated your career path</CardDescription>
+            )}
+          </CardHeader>
+        </button>
+        {showHowItWorks && (
+          <CardContent className="space-y-4 text-sm">
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="p-4 rounded-lg bg-blue-500/5 border border-blue-500/20">
+                <h4 className="font-semibold mb-2 text-blue-600 dark:text-blue-400">📋 Step 1: You Answered Questions</h4>
+                <p className="text-muted-foreground">We asked about your education, finances, personality, and career interests — 30 questions designed by career experts.</p>
+              </div>
+              <div className="p-4 rounded-lg bg-green-500/5 border border-green-500/20">
+                <h4 className="font-semibold mb-2 text-green-600 dark:text-green-400">⚙️ Step 2: Scoring Engine</h4>
+                <p className="text-muted-foreground">Each answer has weighted scores for 6 career paths. Your answers were matched against these weights to calculate your fit.</p>
+              </div>
+              <div className="p-4 rounded-lg bg-purple-500/5 border border-purple-500/20">
+                <h4 className="font-semibold mb-2 text-purple-600 dark:text-purple-400">📊 Step 3: Risk Analysis</h4>
+                <p className="text-muted-foreground">We evaluated your financial stability, family situation, and risk tolerance to see how realistic each path is for you.</p>
+              </div>
+              <div className="p-4 rounded-lg bg-orange-500/5 border border-orange-500/20">
+                <h4 className="font-semibold mb-2 text-orange-600 dark:text-orange-400">🤖 Step 4: AI Enhancement</h4>
+                <p className="text-muted-foreground">An AI (Llama3-70B) reads your scores and generates personalized advice, exam plans, and monthly milestones.</p>
+              </div>
+            </div>
+            <div className="p-4 rounded-lg bg-muted/50 border">
+              <h4 className="font-semibold mb-2">📦 Where is your data stored?</h4>
+              <p className="text-muted-foreground">Your answers and results are stored securely in a PostgreSQL database (hosted on Neon). Only you can access your results — nobody else can see them. The AI doesn&apos;t store your conversations.</p>
+            </div>
+          </CardContent>
+        )}
+      </Card>
+
+      {/* ═══════════════════════════════════════════════════
+          SECTION 1: BASIC RESULTS (without AI)
+          ═══════════════════════════════════════════════════ */}
+      <div className="mb-4">
+        <div className="inline-block px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-medium border border-blue-500/20 mb-4">
+          📊 Basic Results — Scoring Engine Analysis
+        </div>
+      </div>
+
       {/* Best Career Path Hero */}
       <Card className="mb-6 sm:mb-8 bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
         <CardContent className="p-4 sm:p-8 text-center">
           <p className="text-sm text-muted-foreground uppercase tracking-wider mb-2">Your Best Career Path</p>
-          <h2 className="text-xl sm:text-3xl md:text-4xl font-bold text-primary mb-4">
+          <h2 className="text-xl sm:text-3xl md:text-4xl font-bold text-primary mb-3">
             {result.best_career_path}
           </h2>
+          {/* Simple explanation */}
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto mb-4 leading-relaxed">
+            {bestExplanation}
+          </p>
           <div className="flex items-center justify-center gap-4 flex-wrap">
             <Badge variant={riskVariant} className="text-sm px-4 py-1.5">
               {result.risk.level} Risk (Score: {result.risk.score}/10)
@@ -111,7 +211,7 @@ export default function ResultPage() {
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>📊 Career Score Summary</CardTitle>
-          <CardDescription>How you scored across all career categories</CardDescription>
+          <CardDescription>How you scored across all 6 career categories. Higher % = better fit for you.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {result.scores.map((score, idx) => (
@@ -119,6 +219,8 @@ export default function ResultPage() {
               <div className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2">
                   {idx === 0 && <span className="text-yellow-500">🏆</span>}
+                  {idx === 1 && <span className="text-gray-400">🥈</span>}
+                  {idx === 2 && <span className="text-amber-600">🥉</span>}
                   <span className={cn("font-medium", idx === 0 && "text-primary")}>
                     {score.category}
                   </span>
@@ -136,13 +238,27 @@ export default function ResultPage() {
         </CardContent>
       </Card>
 
-      {/* Risk Analysis */}
+      {/* Risk Analysis - Simplified */}
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>⚠️ Risk Assessment</CardTitle>
-          <CardDescription>Based on your financial and personal situation</CardDescription>
+          <CardDescription>This tells you how realistic your top career path is, considering your financial and personal situation</CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Simple summary first */}
+          <div className={cn(
+            "p-4 rounded-lg mb-6 border",
+            result.risk.level === "Low" ? "bg-green-500/5 border-green-500/20" :
+            result.risk.level === "Medium" ? "bg-yellow-500/5 border-yellow-500/20" :
+            "bg-red-500/5 border-red-500/20"
+          )}>
+            <p className="text-sm leading-relaxed">
+              {result.risk.level === "Low" && "✅ Great news! Your risk is low. You have a stable foundation and can comfortably pursue this career path. Take your time to build skills properly."}
+              {result.risk.level === "Medium" && "⚡ Your risk is moderate. You should balance ambition with practical planning. Have a backup plan while working towards your primary goal."}
+              {result.risk.level === "High" && "⚠️ Your risk is high due to financial or family pressures. Focus on paths that offer quicker returns first, then pivot to your dream career over time."}
+            </p>
+          </div>
+
           <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6">
             {Object.entries(result.risk.factors).map(([factor, value]) => (
               <div key={factor} className="text-center p-4 rounded-lg bg-muted/50">
@@ -156,11 +272,12 @@ export default function ResultPage() {
           </div>
           <div className="p-4 rounded-lg bg-muted/30">
             <p className="text-sm">
-              <strong>Formula:</strong> RiskScore = (IncomeUrgency × 0.35) + (FamilyDependency × 0.25) + (RiskTolerance × 0.20) + (CareerInstability × 0.20)
+              <strong>How we calculated this:</strong> RiskScore = (IncomeUrgency × 35%) + (FamilyDependency × 25%) + (RiskTolerance × 20%) + (CareerInstability × 20%)
             </p>
             <p className="text-sm mt-2">
               <strong>Your Score:</strong> {result.risk.score}/10 →{" "}
               <Badge variant={riskVariant}>{result.risk.level}</Badge>
+              <span className="text-muted-foreground ml-2">(0-3 = Low, 4-6 = Medium, 7-10 = High)</span>
             </p>
           </div>
         </CardContent>
@@ -170,7 +287,7 @@ export default function ResultPage() {
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>💰 5-Year Salary Projection</CardTitle>
-          <CardDescription>Expected salary growth for {result.best_career_path}</CardDescription>
+          <CardDescription>Expected salary growth for {result.best_career_path} (in Indian Rupees). These are average figures — your actual salary may vary based on skills and location.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 md:gap-4">
@@ -206,7 +323,7 @@ export default function ResultPage() {
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>🗺️ Preparation Roadmap</CardTitle>
-          <CardDescription>Step-by-step plan to achieve your career goals</CardDescription>
+          <CardDescription>Follow these steps one by one to reach your career goals</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
@@ -237,7 +354,8 @@ export default function ResultPage() {
       <div className="grid md:grid-cols-2 gap-8 mb-8">
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">🛠️ Required Skills</CardTitle>
+            <CardTitle className="text-lg">🛠️ Skills You Need</CardTitle>
+            <CardDescription>Start building these skills now</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
@@ -252,7 +370,8 @@ export default function ResultPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">📝 Suggested Exams</CardTitle>
+            <CardTitle className="text-lg">📝 Exams to Prepare For</CardTitle>
+            <CardDescription>Important competitive exams for this path</CardDescription>
           </CardHeader>
           <CardContent>
             <ul className="space-y-2">
@@ -271,6 +390,7 @@ export default function ResultPage() {
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>🏫 Suggested Institutions</CardTitle>
+          <CardDescription>Top colleges/institutes for {result.best_career_path} in India</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-2 gap-3">
@@ -284,30 +404,162 @@ export default function ResultPage() {
         </CardContent>
       </Card>
 
-      {/* AI Explanation */}
-      {result.ai_explanation && (
-        <Card className="mb-8">
+      {/* ═══════════════════════════════════════════════════
+          SECTION 2: AI-POWERED DEEP ANALYSIS
+          ═══════════════════════════════════════════════════ */}
+      <div className="mb-4 mt-12">
+        <div className="inline-block px-3 py-1 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 text-xs font-medium border border-purple-500/20 mb-4">
+          🤖 AI-Powered Analysis — Enhanced by Llama3-70B
+        </div>
+      </div>
+
+      {result.ai_explanation ? (
+        <Card className="mb-8 border-purple-500/20">
           <CardHeader>
-            <CardTitle>🤖 AI-Powered Analysis</CardTitle>
-            <CardDescription>Personalized explanation from our AI engine</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              🤖 Personalized AI Career Analysis
+            </CardTitle>
+            <CardDescription>
+              Our AI (Llama3-70B) analyzed your scores and created a personalized career plan just for you.
+              This includes a detailed preparation plan with monthly milestones.
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="prose prose-sm max-w-none whitespace-pre-wrap text-sm leading-relaxed">
+            <div className="prose prose-sm max-w-none whitespace-pre-wrap text-sm leading-relaxed dark:prose-invert">
               {result.ai_explanation}
             </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="mb-8 border-dashed">
+          <CardContent className="p-6 text-center">
+            <p className="text-2xl mb-2">🤖</p>
+            <p className="font-medium mb-1">AI Analysis Not Available</p>
+            <p className="text-sm text-muted-foreground max-w-md mx-auto">
+              The basic scoring engine has provided your results above. AI-powered deep analysis 
+              (monthly study plans, detailed exam syllabi, personalized tips) requires the AI module to be enabled.
+            </p>
           </CardContent>
         </Card>
       )}
 
       {/* Actions */}
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-8">
         <Link href="/dashboard" className="w-full sm:w-auto">
           <Button variant="outline" className="w-full">← Back to Dashboard</Button>
         </Link>
         <Link href="/assessment" className="w-full sm:w-auto">
           <Button className="w-full">Take Another Assessment</Button>
         </Link>
+        <Button
+          variant="secondary"
+          className="w-full sm:w-auto"
+          onClick={() => setChatOpen(true)}
+        >
+          💬 Ask AI Questions
+        </Button>
       </div>
+
+      {/* ═══════════════════════════════════════════════════
+          AI CHATBOT WIDGET (floating)
+          ═══════════════════════════════════════════════════ */}
+      {/* Floating chat button */}
+      {!chatOpen && (
+        <button
+          onClick={() => setChatOpen(true)}
+          className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-primary text-white shadow-lg hover:shadow-xl hover:scale-110 transition-all flex items-center justify-center text-2xl z-50"
+          title="Ask AI about your results"
+        >
+          💬
+        </button>
+      )}
+
+      {/* Chat panel */}
+      {chatOpen && (
+        <div className="fixed bottom-6 right-6 w-[90vw] sm:w-[400px] h-[500px] bg-background border rounded-2xl shadow-2xl flex flex-col z-50">
+          {/* Chat header */}
+          <div className="flex items-center justify-between p-4 border-b bg-primary/5 rounded-t-2xl">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">🤖</span>
+              <div>
+                <p className="text-sm font-semibold">Career AI Assistant</p>
+                <p className="text-xs text-muted-foreground">Ask about your results</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setChatOpen(false)}
+              className="h-8 w-8 rounded-full hover:bg-muted flex items-center justify-center text-muted-foreground"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Chat messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            {chatMessages.map((msg, i) => (
+              <div
+                key={i}
+                className={cn(
+                  "max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed",
+                  msg.role === "user"
+                    ? "ml-auto bg-primary text-primary-foreground rounded-br-md"
+                    : "bg-muted rounded-bl-md"
+                )}
+              >
+                {msg.text}
+              </div>
+            ))}
+            {chatLoading && (
+              <div className="max-w-[85%] p-3 rounded-2xl bg-muted rounded-bl-md text-sm">
+                <span className="animate-pulse">Thinking...</span>
+              </div>
+            )}
+            <div ref={chatEndRef} />
+          </div>
+
+          {/* Suggested questions */}
+          {chatMessages.length <= 1 && (
+            <div className="px-4 pb-2 flex flex-wrap gap-1.5">
+              {[
+                "What exams should I focus on?",
+                "Expected salary after 3 years?",
+                "Best colleges for my path?",
+                "How to start preparing today?",
+              ].map((q) => (
+                <button
+                  key={q}
+                  onClick={() => { setChatInput(q); }}
+                  className="text-xs px-2.5 py-1.5 rounded-full border hover:bg-accent transition-colors"
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Chat input */}
+          <div className="p-3 border-t">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleChatSend()}
+                placeholder="Ask about your career path..."
+                className="flex-1 h-10 px-4 rounded-full border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                disabled={chatLoading}
+              />
+              <button
+                onClick={handleChatSend}
+                disabled={chatLoading || !chatInput.trim()}
+                className="h-10 w-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-50 hover:opacity-90 transition-opacity"
+              >
+                ↑
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

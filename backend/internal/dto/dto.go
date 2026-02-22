@@ -169,6 +169,21 @@ type AdminStatsResponse struct {
 	RiskDistribution   map[string]int `json:"risk_distribution"`
 }
 
+// ============================================================
+// CHAT DTOs
+// ============================================================
+
+// ChatRequest is the payload for the AI chatbot.
+type ChatRequest struct {
+	Message      string `json:"message" binding:"required,min=1,max=1000"`
+	AssessmentID uint64 `json:"assessment_id"`
+}
+
+// ChatResponse is returned from the AI chatbot.
+type ChatResponse struct {
+	Reply string `json:"reply"`
+}
+
 // ErrorResponse is a standard error payload.
 type ErrorResponse struct {
 	Error   string `json:"error"`

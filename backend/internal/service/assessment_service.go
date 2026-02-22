@@ -143,3 +143,28 @@ func (s *AssessmentService) GetUserAssessments(userID uint64) ([]dto.AssessmentL
 
 	return items, nil
 }
+
+// Chat handles an AI chatbot question in the context of an assessment.
+func (s *AssessmentService) Chat(userID uint64, req dto.ChatRequest) (string, error) {
+	if req.AssessmentID == 0 {
+		return "", fmt.Errorf("assessment_id is required")
+	}
+
+	assessment, err := s.assessmentRepo.FindByID(req.AssessmentID)
+	if err != nil {
+		return "", fmt.Errorf("failed to fetch assessment: %w", err)
+	}
+	if assessment == nil {
+		return "", fmt.Errorf("assessment not found")
+	}
+	if assessment.UserID != userID {
+		return "", fmt.Errorf("unauthorized")
+	}
+
+	var result dto.AssessmentResult
+	if err := json.Unmarshal([]byte(assessment.Result), &result); err != nil {
+		return "", fmt.Errorf("failed to parse assessment result: %w", err)
+	}
+
+	return s.llmService.Chat(req.Message, &result)
+}

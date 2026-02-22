@@ -189,6 +189,41 @@ Follow the preparation roadmap provided below. Focus on building the required sk
 	)
 }
 
+// Chat handles a free-form chat question in the context of a career assessment result.
+func (s *LLMService) Chat(message string, result *dto.AssessmentResult) (string, error) {
+	if !s.IsEnabled() {
+		return "AI chatbot is not enabled. Please contact the administrator to enable the AI module.", nil
+	}
+
+	prompt := fmt.Sprintf(`You are a career counselor chatbot for Indian students. The student has completed a career assessment.
+
+Their assessment results:
+- Best Career Path: %s
+- Risk Level: %s (Score: %.1f/10)
+- Top Scores: %s (%.0f%%), %s (%.0f%%)
+
+The student is asking: "%s"
+
+Provide a helpful, concise, and encouraging response. Keep it under 200 words.
+Focus on actionable Indian-specific advice (exams, colleges, salary in INR, timeline).
+If the question is unrelated to career/education, gently redirect them.`,
+		result.BestCareerPath,
+		result.Risk.Level, result.Risk.Score,
+		result.Scores[0].Category, result.Scores[0].Percentage,
+		result.Scores[1].Category, result.Scores[1].Percentage,
+		message,
+	)
+
+	switch strings.ToLower(s.cfg.LLMProvider) {
+	case "groq":
+		return s.callGroq(prompt)
+	case "claude":
+		return s.callClaude(prompt)
+	default:
+		return "AI chatbot requires a configured LLM provider.", nil
+	}
+}
+
 func getRiskExplanation(level string) string {
 	switch level {
 	case "Low":

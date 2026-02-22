@@ -67,6 +67,14 @@ export const assessmentAPI = {
 };
 
 // ============================================================
+// CHAT API
+// ============================================================
+export const chatAPI = {
+  send: (message: string, assessmentId: number) =>
+    api.post("/api/chat", { message, assessment_id: assessmentId }),
+};
+
+// ============================================================
 // ADMIN API
 // ============================================================
 export const adminAPI = {

@@ -61,6 +61,11 @@ func Setup(
 		}
 
 		// ============================================================
+		// CHAT ROUTE (AI chatbot for career follow-up questions)
+		// ============================================================
+		protected.POST("/chat", assessmentHandler.Chat)
+
+		// ============================================================
 		// ADMIN ROUTES (require JWT + admin role)
 		// ============================================================
 		admin := api.Group("/admin")

@@ -69,3 +69,21 @@ func (h *AssessmentHandler) ListByUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, items)
 }
+
+// Chat handles POST /api/chat — AI chatbot for follow-up career questions.
+func (h *AssessmentHandler) Chat(c *gin.Context) {
+	var req dto.ChatRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, dto.ErrorResponse{Error: "Validation failed", Message: err.Error()})
+		return
+	}
+
+	userID := GetUserID(c)
+	reply, err := h.assessmentService.Chat(userID, req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: "Chat failed", Message: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, dto.ChatResponse{Reply: reply})
+}
