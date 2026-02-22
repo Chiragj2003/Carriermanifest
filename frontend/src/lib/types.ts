@@ -68,15 +68,53 @@ export interface RoadmapStep {
   duration: string;
 }
 
+export interface FeatureContribution {
+  feature: string;
+  user_value: number;
+  career_weight: number;
+  contribution: number;
+  percentage: number;
+}
+
+export interface CareerExplanation {
+  career: string;
+  top_factors: FeatureContribution[];
+  summary: string;
+  penalties?: string[];
+}
+
+export interface UserProfile {
+  academic_strength: number;
+  financial_pressure: number;
+  risk_tolerance: number;
+  leadership_score: number;
+  tech_affinity: number;
+  govt_interest: number;
+  abroad_interest: number;
+  income_urgency: number;
+  career_instability: number;
+}
+
+export interface VersionInfo {
+  assessment: string;
+  weight_matrix: string;
+  feature_map: string;
+}
+
 export interface AssessmentResult {
   scores: CareerScore[];
   best_career_path: string;
+  confidence: number;
+  is_multi_fit: boolean;
   risk: RiskAssessment;
+  profile: UserProfile;
+  explanations: CareerExplanation[];
   salary_projection: SalaryProjection;
   roadmap: RoadmapStep[];
   required_skills: string[];
   suggested_exams: string[];
   suggested_colleges: string[];
+  version: VersionInfo;
   ai_explanation?: string;
 }
 

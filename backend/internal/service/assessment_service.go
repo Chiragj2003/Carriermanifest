@@ -49,9 +49,10 @@ func (s *AssessmentService) SubmitAssessment(userID uint64, req dto.SubmitAssess
 			continue
 		}
 		questionData = append(questionData, engine.QuestionData{
-			ID:       q.ID,
-			Category: q.Category,
-			Weights:  weights,
+			ID:           q.ID,
+			Category:     q.Category,
+			Weights:      weights,
+			DisplayOrder: q.DisplayOrder,
 		})
 	}
 

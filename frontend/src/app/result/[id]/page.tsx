@@ -156,12 +156,12 @@ export default function ResultPage() {
                 <p className="text-muted-foreground">We asked about your education, finances, personality, and career interests — 30 questions designed by career experts.</p>
               </div>
               <div className="p-4 rounded-lg bg-green-500/5 border border-green-500/20">
-                <h4 className="font-semibold mb-2 text-green-600 dark:text-green-400">⚙️ Step 2: Scoring Engine</h4>
-                <p className="text-muted-foreground">Each answer has weighted scores for 6 career paths. Your answers were matched against these weights to calculate your fit.</p>
+                <h4 className="font-semibold mb-2 text-green-600 dark:text-green-400">⚙️ Step 2: Feature Aggregation</h4>
+                <p className="text-muted-foreground">Your answers are converted into 9 measurable traits (Academic Strength, Tech Affinity, Risk Tolerance, etc.) — your personal &quot;Profile DNA&quot;.</p>
               </div>
               <div className="p-4 rounded-lg bg-purple-500/5 border border-purple-500/20">
-                <h4 className="font-semibold mb-2 text-purple-600 dark:text-purple-400">📊 Step 3: Risk Analysis</h4>
-                <p className="text-muted-foreground">We evaluated your financial stability, family situation, and risk tolerance to see how realistic each path is for you.</p>
+                <h4 className="font-semibold mb-2 text-purple-600 dark:text-purple-400">📊 Step 3: Vector Scoring</h4>
+                <p className="text-muted-foreground">Your profile vector is compared against career weight vectors using mathematical dot products. Each career has a unique signature of traits it values.</p>
               </div>
               <div className="p-4 rounded-lg bg-orange-500/5 border border-orange-500/20">
                 <h4 className="font-semibold mb-2 text-orange-600 dark:text-orange-400">🤖 Step 4: AI Enhancement</h4>
@@ -203,9 +203,126 @@ export default function ResultPage() {
             <Badge variant="secondary" className="text-sm px-4 py-1.5">
               Match: {result.scores[0].percentage}%
             </Badge>
+            {result.confidence !== undefined && (
+              <Badge variant={result.is_multi_fit ? "outline" : "default"} className="text-sm px-4 py-1.5">
+                {result.is_multi_fit
+                  ? "🔀 Multi-Fit Profile"
+                  : `Confidence: ${(result.confidence * 100).toFixed(0)}%`}
+              </Badge>
+            )}
           </div>
         </CardContent>
       </Card>
+
+      {/* User Profile — Feature Breakdown */}
+      {result.profile && (
+        <Card className="mb-6 sm:mb-8">
+          <CardHeader>
+            <CardTitle>🧬 Your Profile DNA</CardTitle>
+            <CardDescription>
+              Your answers were converted into 9 measurable traits. This is the foundation of our recommendation.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { label: "Academic Strength", value: result.profile.academic_strength, color: "bg-blue-500" },
+                { label: "Tech Affinity", value: result.profile.tech_affinity, color: "bg-cyan-500" },
+                { label: "Leadership", value: result.profile.leadership_score, color: "bg-purple-500" },
+                { label: "Risk Tolerance", value: result.profile.risk_tolerance, color: "bg-orange-500" },
+                { label: "Abroad Interest", value: result.profile.abroad_interest, color: "bg-teal-500" },
+                { label: "Govt Interest", value: result.profile.govt_interest, color: "bg-amber-500" },
+                { label: "Financial Pressure", value: result.profile.financial_pressure, color: "bg-red-500" },
+                { label: "Income Urgency", value: result.profile.income_urgency, color: "bg-rose-500" },
+                { label: "Career Instability", value: result.profile.career_instability, color: "bg-gray-500" },
+              ].map((feat) => (
+                <div key={feat.label} className="text-center p-3 rounded-lg bg-muted/50">
+                  <p className="text-xs text-muted-foreground mb-1">{feat.label}</p>
+                  <div className="w-full h-2 bg-muted rounded-full mb-1">
+                    <div
+                      className={`h-2 rounded-full ${feat.color}`}
+                      style={{ width: `${Math.round(feat.value * 100)}%` }}
+                    />
+                  </div>
+                  <p className="text-sm font-semibold">{(feat.value * 100).toFixed(0)}%</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Why This Career — Explanations */}
+      {result.explanations && result.explanations.length > 0 && (
+        <Card className="mb-6 sm:mb-8 border-green-500/20">
+          <CardHeader>
+            <CardTitle>🔍 Why {result.best_career_path}?</CardTitle>
+            <CardDescription>
+              Data-driven breakdown of how each trait contributed to your top recommendation
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {result.explanations.slice(0, 3).map((exp, expIdx) => (
+              <div key={exp.career} className={expIdx > 0 ? "pt-4 border-t" : ""}>
+                <div className="flex items-center gap-2 mb-3">
+                  {expIdx === 0 && <span className="text-yellow-500">🏆</span>}
+                  {expIdx === 1 && <span className="text-gray-400">🥈</span>}
+                  {expIdx === 2 && <span className="text-amber-600">🥉</span>}
+                  <h4 className="font-semibold">{exp.career}</h4>
+                </div>
+                <div className="space-y-2">
+                  {exp.top_factors
+                    .filter((f) => f.contribution > 0)
+                    .slice(0, 4)
+                    .map((f) => (
+                      <div key={f.feature} className="flex items-center gap-3">
+                        <span className="text-xs text-muted-foreground w-32 sm:w-40 truncate">
+                          {f.feature}
+                        </span>
+                        <div className="flex-1 h-2 bg-muted rounded-full">
+                          <div
+                            className="h-2 rounded-full bg-green-500"
+                            style={{ width: `${Math.min(f.percentage, 100)}%` }}
+                          />
+                        </div>
+                        <span className="text-xs font-medium w-12 text-right text-green-600 dark:text-green-400">
+                          +{f.percentage.toFixed(0)}%
+                        </span>
+                      </div>
+                    ))}
+                  {exp.top_factors
+                    .filter((f) => f.contribution < 0 && Math.abs(f.contribution) > 0.02)
+                    .slice(0, 2)
+                    .map((f) => (
+                      <div key={f.feature} className="flex items-center gap-3 opacity-70">
+                        <span className="text-xs text-muted-foreground w-32 sm:w-40 truncate">
+                          {f.feature}
+                        </span>
+                        <div className="flex-1 h-2 bg-muted rounded-full">
+                          <div
+                            className="h-2 rounded-full bg-red-400"
+                            style={{ width: `${Math.min(Math.abs(f.percentage || (f.contribution * 100)), 100)}%` }}
+                          />
+                        </div>
+                        <span className="text-xs font-medium w-12 text-right text-red-500">
+                          drag
+                        </span>
+                      </div>
+                    ))}
+                </div>
+                {exp.penalties && exp.penalties.length > 0 && (
+                  <div className="mt-2 p-2 rounded bg-red-500/5 border border-red-500/10">
+                    <p className="text-xs font-medium text-red-600 dark:text-red-400 mb-1">Risk Adjustments:</p>
+                    {exp.penalties.map((p, i) => (
+                      <p key={i} className="text-xs text-muted-foreground">{p}</p>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Score Breakdown */}
       <Card className="mb-8">
@@ -272,7 +389,7 @@ export default function ResultPage() {
           </div>
           <div className="p-4 rounded-lg bg-muted/30">
             <p className="text-sm">
-              <strong>How we calculated this:</strong> RiskScore = (IncomeUrgency × 35%) + (FamilyDependency × 25%) + (RiskTolerance × 20%) + (CareerInstability × 20%)
+              <strong>How we calculated this:</strong> RiskScore = (IncomeUrgency × 35%) + (FinancialPressure × 25%) + (RiskTolerance × 20%) + (CareerInstability × 20%)
             </p>
             <p className="text-sm mt-2">
               <strong>Your Score:</strong> {result.risk.score}/10 →{" "}
@@ -441,6 +558,13 @@ export default function ResultPage() {
             </p>
           </CardContent>
         </Card>
+      )}
+
+      {/* Version info */}
+      {result.version && (
+        <div className="text-center text-xs text-muted-foreground mb-4">
+          Engine v{result.version.assessment} • Matrix v{result.version.weight_matrix} • Features v{result.version.feature_map}
+        </div>
       )}
 
       {/* Actions */}

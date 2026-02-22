@@ -85,17 +85,59 @@ type RoadmapStep struct {
 	Duration    string `json:"duration"`
 }
 
+// FeatureContributionDTO describes how a feature contributed to a career score.
+type FeatureContributionDTO struct {
+	Feature      string  `json:"feature"`
+	UserValue    float64 `json:"user_value"`
+	CareerWeight float64 `json:"career_weight"`
+	Contribution float64 `json:"contribution"`
+	Percentage   float64 `json:"percentage"`
+}
+
+// CareerExplanationDTO holds the deterministic explanation for a career.
+type CareerExplanationDTO struct {
+	Career      string                   `json:"career"`
+	TopFactors  []FeatureContributionDTO `json:"top_factors"`
+	Summary     string                   `json:"summary"`
+	Penalties   []string                 `json:"penalties,omitempty"`
+}
+
+// UserProfileDTO represents the aggregated feature profile of the user.
+type UserProfileDTO struct {
+	AcademicStrength  float64 `json:"academic_strength"`
+	FinancialPressure float64 `json:"financial_pressure"`
+	RiskTolerance     float64 `json:"risk_tolerance"`
+	LeadershipScore   float64 `json:"leadership_score"`
+	TechAffinity      float64 `json:"tech_affinity"`
+	GovtInterest      float64 `json:"govt_interest"`
+	AbroadInterest    float64 `json:"abroad_interest"`
+	IncomeUrgency     float64 `json:"income_urgency"`
+	CareerInstability float64 `json:"career_instability"`
+}
+
+// VersionInfo holds version metadata for reproducibility.
+type VersionInfo struct {
+	Assessment  string `json:"assessment"`
+	WeightMatrix string `json:"weight_matrix"`
+	FeatureMap  string `json:"feature_map"`
+}
+
 // AssessmentResult is the full computed result.
 type AssessmentResult struct {
-	Scores           []CareerScore     `json:"scores"`
-	BestCareerPath   string            `json:"best_career_path"`
-	Risk             RiskAssessment    `json:"risk"`
-	SalaryProjection SalaryProjection  `json:"salary_projection"`
-	Roadmap          []RoadmapStep     `json:"roadmap"`
-	RequiredSkills   []string          `json:"required_skills"`
-	SuggestedExams   []string          `json:"suggested_exams"`
-	SuggestedColleges []string         `json:"suggested_colleges"`
-	AIExplanation    string            `json:"ai_explanation,omitempty"`
+	Scores            []CareerScore          `json:"scores"`
+	BestCareerPath    string                 `json:"best_career_path"`
+	Confidence        float64                `json:"confidence"`
+	IsMultiFit        bool                   `json:"is_multi_fit"`
+	Risk              RiskAssessment         `json:"risk"`
+	Profile           UserProfileDTO         `json:"profile"`
+	Explanations      []CareerExplanationDTO `json:"explanations"`
+	SalaryProjection  SalaryProjection       `json:"salary_projection"`
+	Roadmap           []RoadmapStep          `json:"roadmap"`
+	RequiredSkills    []string               `json:"required_skills"`
+	SuggestedExams    []string               `json:"suggested_exams"`
+	SuggestedColleges []string               `json:"suggested_colleges"`
+	Version           VersionInfo            `json:"version"`
+	AIExplanation     string                 `json:"ai_explanation,omitempty"`
 }
 
 // AssessmentResponse is returned after submitting an assessment.
