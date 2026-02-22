@@ -20,23 +20,23 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 
 // Create inserts a new user and returns the created user.
 func (r *UserRepository) Create(name, email, passwordHash string) (*models.User, error) {
-	result, err := r.db.Exec(
-		"INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, 'user')",
+	var id uint64
+	err := r.db.QueryRow(
+		"INSERT INTO users (name, email, password_hash, role) VALUES ($1, $2, $3, 'user') RETURNING id",
 		name, email, passwordHash,
-	)
+	).Scan(&id)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create user: %w", err)
 	}
 
-	id, _ := result.LastInsertId()
-	return r.FindByID(uint64(id))
+	return r.FindByID(id)
 }
 
 // FindByEmail retrieves a user by email address.
 func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 	user := &models.User{}
 	err := r.db.QueryRow(
-		"SELECT id, name, email, password_hash, role, created_at, updated_at FROM users WHERE email = ?",
+		"SELECT id, name, email, password_hash, role, created_at, updated_at FROM users WHERE email = $1",
 		email,
 	).Scan(&user.ID, &user.Name, &user.Email, &user.PasswordHash, &user.Role, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
@@ -52,7 +52,7 @@ func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 func (r *UserRepository) FindByID(id uint64) (*models.User, error) {
 	user := &models.User{}
 	err := r.db.QueryRow(
-		"SELECT id, name, email, password_hash, role, created_at, updated_at FROM users WHERE id = ?",
+		"SELECT id, name, email, password_hash, role, created_at, updated_at FROM users WHERE id = $1",
 		id,
 	).Scan(&user.ID, &user.Name, &user.Email, &user.PasswordHash, &user.Role, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
@@ -73,17 +73,25 @@ func (r *UserRepository) CountUsers() (int, error) {
 
 // CreateAdmin creates an admin user (used for seeding).
 func (r *UserRepository) CreateAdmin(name, email, passwordHash string) (*models.User, error) {
-	result, err := r.db.Exec(
-		"INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, 'admin') ON DUPLICATE KEY UPDATE role='admin'",
+	// Check if exists first (avoids ON CONFLICT issues with connection poolers)
+	existing, _ := r.FindByEmail(email)
+	if existing != nil {
+		// Update role to admin
+		_, err := r.db.Exec("UPDATE users SET role='admin' WHERE email=$1", email)
+		if err != nil {
+			return nil, fmt.Errorf("failed to update admin role: %w", err)
+		}
+		return r.FindByEmail(email)
+	}
+
+	var id uint64
+	err := r.db.QueryRow(
+		"INSERT INTO users (name, email, password_hash, role) VALUES ($1, $2, $3, 'admin') RETURNING id",
 		name, email, passwordHash,
-	)
+	).Scan(&id)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create admin: %w", err)
 	}
 
-	id, _ := result.LastInsertId()
-	if id == 0 {
-		return r.FindByEmail(email)
-	}
-	return r.FindByID(uint64(id))
+	return r.FindByID(id)
 }

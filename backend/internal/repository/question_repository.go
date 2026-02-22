@@ -19,23 +19,23 @@ func NewQuestionRepository(db *sql.DB) *QuestionRepository {
 
 // Create inserts a new question.
 func (r *QuestionRepository) Create(category, text, options, weights string, order int) (*models.Question, error) {
-	result, err := r.db.Exec(
-		"INSERT INTO questions (category, question_text, options, weights, display_order) VALUES (?, ?, ?, ?, ?)",
+	var id uint64
+	err := r.db.QueryRow(
+		"INSERT INTO questions (category, question_text, options, weights, display_order) VALUES ($1, $2, $3, $4, $5) RETURNING id",
 		category, text, options, weights, order,
-	)
+	).Scan(&id)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create question: %w", err)
 	}
 
-	id, _ := result.LastInsertId()
-	return r.FindByID(uint64(id))
+	return r.FindByID(id)
 }
 
 // FindByID retrieves a question by ID.
 func (r *QuestionRepository) FindByID(id uint64) (*models.Question, error) {
 	q := &models.Question{}
 	err := r.db.QueryRow(
-		"SELECT id, category, question_text, options, weights, display_order, is_active, created_at, updated_at FROM questions WHERE id = ?",
+		"SELECT id, category, question_text, options, weights, display_order, is_active, created_at, updated_at FROM questions WHERE id = $1",
 		id,
 	).Scan(&q.ID, &q.Category, &q.QuestionText, &q.Options, &q.Weights, &q.DisplayOrder, &q.IsActive, &q.CreatedAt, &q.UpdatedAt)
 	if err != nil {
@@ -92,7 +92,7 @@ func (r *QuestionRepository) FindAll() ([]models.Question, error) {
 // Update modifies a question.
 func (r *QuestionRepository) Update(id uint64, category, text, options, weights string, order int, isActive bool) error {
 	_, err := r.db.Exec(
-		"UPDATE questions SET category=?, question_text=?, options=?, weights=?, display_order=?, is_active=? WHERE id=?",
+		"UPDATE questions SET category=$1, question_text=$2, options=$3, weights=$4, display_order=$5, is_active=$6, updated_at=NOW() WHERE id=$7",
 		category, text, options, weights, order, isActive, id,
 	)
 	return err

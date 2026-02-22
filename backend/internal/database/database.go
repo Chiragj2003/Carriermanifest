@@ -1,4 +1,4 @@
-// Package database handles MySQL connection and schema initialization.
+// Package database handles PostgreSQL connection and schema initialization.
 package database
 
 import (
@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"log"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 )
 
-// Connect establishes a connection to MySQL and verifies it with a ping.
-func Connect(dsn string) (*sql.DB, error) {
-	db, err := sql.Open("mysql", dsn)
+// Connect establishes a connection to PostgreSQL and verifies it with a ping.
+func Connect(databaseURL string) (*sql.DB, error) {
+	db, err := sql.Open("postgres", databaseURL)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open database: %w", err)
 	}
@@ -23,7 +23,7 @@ func Connect(dsn string) (*sql.DB, error) {
 		return nil, fmt.Errorf("failed to ping database: %w", err)
 	}
 
-	log.Println("✅ Connected to MySQL database")
+	log.Println("✅ Connected to PostgreSQL database (Neon)")
 	return db, nil
 }
 
@@ -31,39 +31,41 @@ func Connect(dsn string) (*sql.DB, error) {
 func Migrate(db *sql.DB) error {
 	statements := []string{
 		`CREATE TABLE IF NOT EXISTS users (
-			id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+			id BIGSERIAL PRIMARY KEY,
 			name VARCHAR(255) NOT NULL,
 			email VARCHAR(255) NOT NULL UNIQUE,
 			password_hash VARCHAR(255) NOT NULL,
-			role ENUM('user', 'admin') DEFAULT 'user',
-			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-			updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-			INDEX idx_email (email)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`,
+			role VARCHAR(10) NOT NULL DEFAULT 'user',
+			created_at TIMESTAMPTZ DEFAULT NOW(),
+			updated_at TIMESTAMPTZ DEFAULT NOW()
+		);`,
+
+		`CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);`,
 
 		`CREATE TABLE IF NOT EXISTS assessments (
-			id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-			user_id BIGINT UNSIGNED NOT NULL,
-			answers JSON NOT NULL,
-			result JSON NOT NULL,
-			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-			FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-			INDEX idx_user_id (user_id)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`,
+			id BIGSERIAL PRIMARY KEY,
+			user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+			answers JSONB NOT NULL,
+			result JSONB NOT NULL,
+			created_at TIMESTAMPTZ DEFAULT NOW()
+		);`,
+
+		`CREATE INDEX IF NOT EXISTS idx_assessments_user_id ON assessments(user_id);`,
 
 		`CREATE TABLE IF NOT EXISTS questions (
-			id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+			id BIGSERIAL PRIMARY KEY,
 			category VARCHAR(100) NOT NULL,
 			question_text TEXT NOT NULL,
-			options JSON NOT NULL,
-			weights JSON NOT NULL,
+			options JSONB NOT NULL,
+			weights JSONB NOT NULL,
 			display_order INT DEFAULT 0,
 			is_active BOOLEAN DEFAULT TRUE,
-			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-			updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-			INDEX idx_category (category),
-			INDEX idx_active_order (is_active, display_order)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`,
+			created_at TIMESTAMPTZ DEFAULT NOW(),
+			updated_at TIMESTAMPTZ DEFAULT NOW()
+		);`,
+
+		`CREATE INDEX IF NOT EXISTS idx_questions_category ON questions(category);`,
+		`CREATE INDEX IF NOT EXISTS idx_questions_active_order ON questions(is_active, display_order);`,
 	}
 
 	for _, stmt := range statements {

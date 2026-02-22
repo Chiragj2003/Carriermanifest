@@ -16,11 +16,7 @@ type Config struct {
 	GinMode string
 
 	// Database
-	DBHost     string
-	DBPort     string
-	DBUser     string
-	DBPassword string
-	DBName     string
+	DatabaseURL string
 
 	// JWT
 	JWTSecret      string
@@ -50,11 +46,7 @@ func Load() (*Config, error) {
 		Port:    getEnv("PORT", "8080"),
 		GinMode: getEnv("GIN_MODE", "debug"),
 
-		DBHost:     getEnv("DB_HOST", "localhost"),
-		DBPort:     getEnv("DB_PORT", "3306"),
-		DBUser:     getEnv("DB_USER", "root"),
-		DBPassword: getEnv("DB_PASSWORD", ""),
-		DBName:     getEnv("DB_NAME", "careermanifest"),
+		DatabaseURL: getEnv("DATABASE_URL", ""),
 
 		JWTSecret:      getEnv("JWT_SECRET", "default-secret-change-me"),
 		JWTExpiryHours: jwtExpiry,
@@ -69,17 +61,11 @@ func Load() (*Config, error) {
 		AdminPassword: getEnv("ADMIN_PASSWORD", "Admin@123"),
 	}
 
-	if cfg.DBPassword == "" {
-		return nil, fmt.Errorf("DB_PASSWORD environment variable is required")
+	if cfg.DatabaseURL == "" {
+		return nil, fmt.Errorf("DATABASE_URL environment variable is required")
 	}
 
 	return cfg, nil
-}
-
-// DSN returns the MySQL Data Source Name string.
-func (c *Config) DSN() string {
-	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		c.DBUser, c.DBPassword, c.DBHost, c.DBPort, c.DBName)
 }
 
 // IsLLMEnabled checks if an LLM provider is configured.

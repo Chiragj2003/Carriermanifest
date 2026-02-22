@@ -19,23 +19,23 @@ func NewAssessmentRepository(db *sql.DB) *AssessmentRepository {
 
 // Create stores a new assessment result.
 func (r *AssessmentRepository) Create(userID uint64, answers, result string) (*models.Assessment, error) {
-	res, err := r.db.Exec(
-		"INSERT INTO assessments (user_id, answers, result) VALUES (?, ?, ?)",
+	var id uint64
+	err := r.db.QueryRow(
+		"INSERT INTO assessments (user_id, answers, result) VALUES ($1, $2, $3) RETURNING id",
 		userID, answers, result,
-	)
+	).Scan(&id)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create assessment: %w", err)
 	}
 
-	id, _ := res.LastInsertId()
-	return r.FindByID(uint64(id))
+	return r.FindByID(id)
 }
 
 // FindByID retrieves an assessment by ID.
 func (r *AssessmentRepository) FindByID(id uint64) (*models.Assessment, error) {
 	a := &models.Assessment{}
 	err := r.db.QueryRow(
-		"SELECT id, user_id, answers, result, created_at FROM assessments WHERE id = ?",
+		"SELECT id, user_id, answers, result, created_at FROM assessments WHERE id = $1",
 		id,
 	).Scan(&a.ID, &a.UserID, &a.Answers, &a.Result, &a.CreatedAt)
 	if err != nil {
@@ -50,7 +50,7 @@ func (r *AssessmentRepository) FindByID(id uint64) (*models.Assessment, error) {
 // FindByUserID retrieves all assessments for a user.
 func (r *AssessmentRepository) FindByUserID(userID uint64) ([]models.Assessment, error) {
 	rows, err := r.db.Query(
-		"SELECT id, user_id, answers, result, created_at FROM assessments WHERE user_id = ? ORDER BY created_at DESC",
+		"SELECT id, user_id, answers, result, created_at FROM assessments WHERE user_id = $1 ORDER BY created_at DESC",
 		userID,
 	)
 	if err != nil {
@@ -79,7 +79,7 @@ func (r *AssessmentRepository) CountAssessments() (int, error) {
 // GetCareerDistribution returns the count of each best career path.
 func (r *AssessmentRepository) GetCareerDistribution() (map[string]int, error) {
 	rows, err := r.db.Query(
-		"SELECT JSON_EXTRACT(result, '$.best_career_path') as career, COUNT(*) as cnt FROM assessments GROUP BY career",
+		"SELECT result->>'best_career_path' as career, COUNT(*) as cnt FROM assessments GROUP BY career",
 	)
 	if err != nil {
 		return nil, err
@@ -93,10 +93,6 @@ func (r *AssessmentRepository) GetCareerDistribution() (map[string]int, error) {
 		if err := rows.Scan(&career, &count); err != nil {
 			continue
 		}
-		// Remove JSON quotes
-		if len(career) >= 2 && career[0] == '"' {
-			career = career[1 : len(career)-1]
-		}
 		dist[career] = count
 	}
 	return dist, nil
@@ -105,7 +101,7 @@ func (r *AssessmentRepository) GetCareerDistribution() (map[string]int, error) {
 // GetRiskDistribution returns the count of each risk level.
 func (r *AssessmentRepository) GetRiskDistribution() (map[string]int, error) {
 	rows, err := r.db.Query(
-		"SELECT JSON_EXTRACT(result, '$.risk.level') as risk_level, COUNT(*) as cnt FROM assessments GROUP BY risk_level",
+		"SELECT result->'risk'->>'level' as risk_level, COUNT(*) as cnt FROM assessments GROUP BY risk_level",
 	)
 	if err != nil {
 		return nil, err
@@ -118,9 +114,6 @@ func (r *AssessmentRepository) GetRiskDistribution() (map[string]int, error) {
 		var count int
 		if err := rows.Scan(&level, &count); err != nil {
 			continue
-		}
-		if len(level) >= 2 && level[0] == '"' {
-			level = level[1 : len(level)-1]
 		}
 		dist[level] = count
 	}
