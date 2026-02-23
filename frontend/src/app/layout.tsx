@@ -22,7 +22,20 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "CareerManifest - AI-Powered Career Decision Platform",
-  description: "AI-Powered Career Decision Platform for Indian Students. Get personalized career recommendations based on your academic background, financial situation, and personality.",
+  description:
+    "AI-Powered Career Decision Platform for Indian Students. Get personalized career recommendations based on your academic background, financial situation, and personality.",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/apple-icon.svg",
+  },
+  openGraph: {
+    title: "CareerManifest",
+    description: "ML-powered career assessment for Indian students — 88.45% accuracy",
+    siteName: "CareerManifest",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
