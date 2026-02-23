@@ -98,6 +98,42 @@ var CareerWeightMatrix = [NumCareers][NumFeatures]float64{
 		-0.35, // IncomeUrgency     — ML: -0.08, amplified (2yr delay)
 		0.05,  // CareerInstability  — ML: -0.03, neutral
 	},
+	// CareerDataScience: TechAffinity + AcademicStrength dominant, strong abroad signal
+	{
+		0.75,  // AcademicStrength  — strong math/stats background needed
+		-0.15, // FinancialPressure — pays well, negative pressure
+		0.30,  // RiskTolerance     — moderately innovative field
+		0.20,  // LeadershipScore   — some leadership in ML teams
+		0.88,  // TechAffinity      — highly technical (Python, ML, DL)
+		-0.25, // GovtInterest      — inverse (private sector focus)
+		0.50,  // AbroadInterest    — many DS/AI jobs globally
+		-0.10, // IncomeUrgency     — DS pays early, mild negative
+		0.15,  // CareerInstability  — fast-evolving field
+	},
+	// CareerCreative: Low academic, high risk tolerance, artistic temperament
+	{
+		0.15,  // AcademicStrength  — less academic-dependent
+		-0.10, // FinancialPressure — variable income early on
+		0.50,  // RiskTolerance     — creative careers need risk appetite
+		0.30,  // LeadershipScore   — creative direction, team leading
+		0.40,  // TechAffinity      — digital tools (Figma, Adobe, code)
+		-0.45, // GovtInterest      — strongly inverse
+		0.30,  // AbroadInterest    — global creative industry
+		-0.15, // IncomeUrgency     — may have slow start
+		0.40,  // CareerInstability  — freelance/project-based
+	},
+	// CareerHealthcare: AcademicStrength dominant, stability-seeking, GovtInterest (AIIMS/govt hospitals)
+	{
+		0.85,  // AcademicStrength  — PCB, NEET, strong academics
+		0.10,  // FinancialPressure — stability-seeking similar to govt
+		-0.20, // RiskTolerance     — low risk, structured career
+		0.35,  // LeadershipScore   — hospital admin, department heads
+		-0.10, // TechAffinity      — less tech-focused (except biotech)
+		0.35,  // GovtInterest      — govt hospitals, AIIMS, public health
+		0.20,  // AbroadInterest    — USMLE/PLAB for abroad options
+		-0.25, // IncomeUrgency     — long training (MBBS = 5.5 yrs)
+		-0.20, // CareerInstability  — very stable career
+	},
 }
 
 // GetCareerWeights returns the weight vector for a given career.

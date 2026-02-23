@@ -21,6 +21,12 @@ const (
 	CareerHigherStudies
 	// CareerMSAbroad represents MS Abroad.
 	CareerMSAbroad
+	// CareerDataScience represents Data Science / AI.
+	CareerDataScience
+	// CareerCreative represents Creative & Design.
+	CareerCreative
+	// CareerHealthcare represents Healthcare / Medical.
+	CareerHealthcare
 	// NumCareers is the total number of career categories.
 	NumCareers
 )
@@ -33,6 +39,9 @@ var careerLabels = map[Career]string{
 	CareerStartup:       "Startup / Entrepreneurship",
 	CareerHigherStudies: "Higher Studies (India)",
 	CareerMSAbroad:      "MS Abroad",
+	CareerDataScience:   "Data Science / AI",
+	CareerCreative:      "Creative & Design",
+	CareerHealthcare:    "Healthcare / Medical",
 }
 
 // labelToCareer maps the legacy string labels to Career enum.
@@ -43,6 +52,9 @@ var labelToCareer = map[string]Career{
 	"Startup / Entrepreneurship": CareerStartup,
 	"Higher Studies (India)":     CareerHigherStudies,
 	"MS Abroad":                  CareerMSAbroad,
+	"Data Science / AI":          CareerDataScience,
+	"Creative & Design":          CareerCreative,
+	"Healthcare / Medical":       CareerHealthcare,
 }
 
 // String returns the human-readable label for a Career.
@@ -62,6 +74,9 @@ func AllCareers() []Career {
 		CareerStartup,
 		CareerHigherStudies,
 		CareerMSAbroad,
+		CareerDataScience,
+		CareerCreative,
+		CareerHealthcare,
 	}
 }
 

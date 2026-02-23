@@ -33,6 +33,18 @@ func GetSalaryProjection(career Career) dto.SalaryProjection {
 			Year1: "$0 (Studying)", Year2: "$60-90K/year", Year3: "$75-120K/year",
 			Year4: "$90-150K/year", Year5: "$100-180K/year",
 		},
+		CareerDataScience: {
+			Year1: "₹6-12 LPA", Year2: "₹10-18 LPA", Year3: "₹15-28 LPA",
+			Year4: "₹20-40 LPA", Year5: "₹25-60 LPA",
+		},
+		CareerCreative: {
+			Year1: "₹3-6 LPA", Year2: "₹5-10 LPA", Year3: "₹8-16 LPA",
+			Year4: "₹12-24 LPA", Year5: "₹15-35 LPA",
+		},
+		CareerHealthcare: {
+			Year1: "₹0 (Internship)", Year2: "₹5-10 LPA", Year3: "₹8-15 LPA",
+			Year4: "₹12-25 LPA", Year5: "₹18-50 LPA",
+		},
 	}
 
 	if p, ok := projections[career]; ok {
@@ -86,6 +98,27 @@ func GetRoadmap(career Career) []dto.RoadmapStep {
 			{Step: 4, Title: "Funding & Visa", Description: "Apply for scholarships, TA/RA positions. Education loan. F1/student visa.", Duration: "3 months"},
 			{Step: 5, Title: "Pre-Departure", Description: "Housing, bank account, health insurance. Connect with seniors at target university.", Duration: "2 months"},
 		},
+		CareerDataScience: {
+			{Step: 1, Title: "Learn Python & Math Foundations", Description: "Master Python, NumPy, Pandas. Study linear algebra, probability, and statistics.", Duration: "3 months"},
+			{Step: 2, Title: "Machine Learning & Deep Learning", Description: "Complete Andrew Ng's ML course. Learn scikit-learn, TensorFlow/PyTorch. Build 5+ ML projects.", Duration: "4 months"},
+			{Step: 3, Title: "Data Engineering & Tools", Description: "Learn SQL, Spark, Airflow. Cloud platforms (AWS SageMaker, GCP Vertex AI). Data visualization.", Duration: "2 months"},
+			{Step: 4, Title: "Portfolio & Kaggle", Description: "Compete on Kaggle (target Expert/Master). Build GitHub portfolio. Write technical blogs.", Duration: "3 months"},
+			{Step: 5, Title: "Interview Prep & Placement", Description: "Practice ML system design, statistics questions, and coding. Apply on LinkedIn, Naukri, AngelList.", Duration: "2 months"},
+		},
+		CareerCreative: {
+			{Step: 1, Title: "Learn Design Fundamentals", Description: "Study color theory, typography, layout principles. Start with Canva, move to Figma/Adobe XD.", Duration: "2 months"},
+			{Step: 2, Title: "Master Your Tools", Description: "Learn Adobe Photoshop, Illustrator, Premiere Pro or After Effects. Practice daily.", Duration: "3 months"},
+			{Step: 3, Title: "Build Portfolio & Freelance", Description: "Create 10-15 portfolio pieces. Start freelancing on Fiverr/Upwork/Behance. Build personal brand.", Duration: "3 months"},
+			{Step: 4, Title: "Specialize & Network", Description: "Pick a niche: UI/UX, motion graphics, branding, or 3D. Attend design meetups and conferences.", Duration: "3 months"},
+			{Step: 5, Title: "Full-Time Roles or Studio", Description: "Apply to design agencies, startups, or MNCs. Consider starting your own design studio.", Duration: "2 months"},
+		},
+		CareerHealthcare: {
+			{Step: 1, Title: "NEET Preparation", Description: "Study NCERT Biology, Physics, Chemistry. Join coaching (Allen/Aakash) or self-study via PW/Unacademy.", Duration: "12 months"},
+			{Step: 2, Title: "MBBS/BDS Admission", Description: "Secure seat in govt medical college (AIIMS/JIPMER) or private college. Complete 5.5 years MBBS.", Duration: "5.5 years"},
+			{Step: 3, Title: "Internship (CRRI)", Description: "Complete 1-year compulsory rotating internship. Gain hands-on clinical experience.", Duration: "1 year"},
+			{Step: 4, Title: "PG Entrance (NEET PG/INI CET)", Description: "Prepare for NEET PG or INI CET for MD/MS specialization. Choose your specialty.", Duration: "6-12 months"},
+			{Step: 5, Title: "Specialization & Practice", Description: "Complete MD/MS (3 yrs). Super-specialization (DM/MCh) optional. Start practice or join hospital.", Duration: "3+ years"},
+		},
 	}
 
 	if r, ok := roadmaps[career]; ok {
@@ -133,6 +166,24 @@ func GetRequiredSkills(career Career) []string {
 			"Core Domain Knowledge", "Programming & Tools",
 			"Networking & Communication", "Cross-Cultural Adaptability",
 		},
+		CareerDataScience: {
+			"Python & R Programming", "Statistics & Probability",
+			"Machine Learning & Deep Learning", "SQL & Data Engineering",
+			"Data Visualization (Tableau/Power BI)", "Cloud Platforms (AWS/GCP/Azure)",
+			"NLP & Computer Vision", "Git & MLOps",
+		},
+		CareerCreative: {
+			"UI/UX Design (Figma, Adobe XD)", "Visual Design & Typography",
+			"Adobe Creative Suite (Photoshop, Illustrator)", "Motion Graphics & Video Editing",
+			"Design Thinking & User Research", "Branding & Identity Design",
+			"HTML/CSS Basics", "Portfolio Presentation",
+		},
+		CareerHealthcare: {
+			"Biology & Human Anatomy", "Clinical Skills & Diagnosis",
+			"Pharmacology & Medicine", "Patient Communication",
+			"Research Methodology", "Medical Ethics",
+			"Emergency Medicine Basics", "Public Health Awareness",
+		},
 	}
 
 	if s, ok := skills[career]; ok {
@@ -150,6 +201,9 @@ func GetSuggestedExams(career Career) []string {
 		CareerStartup:       {"No specific exams - focus on building", "Y Combinator Application", "Shark Tank India (if applicable)"},
 		CareerHigherStudies: {"GATE", "UGC NET", "CSIR NET", "IIT JAM", "JEST"},
 		CareerMSAbroad:      {"GRE General", "TOEFL iBT", "IELTS Academic", "GRE Subject (optional)"},
+		CareerDataScience:   {"Google Data Analytics Certificate", "AWS ML Specialty", "TensorFlow Developer Certificate", "Kaggle Competitions", "Microsoft Azure AI Fundamentals"},
+		CareerCreative:      {"NID DAT", "NIFT Entrance", "UCEED", "Google UX Design Certificate", "Adobe Certified Professional"},
+		CareerHealthcare:    {"NEET UG", "NEET PG", "INI CET", "AIIMS PG", "USMLE (for abroad)", "PLAB (UK)"},
 	}
 
 	if e, ok := exams[career]; ok {
@@ -191,6 +245,24 @@ func GetSuggestedColleges(career Career) []string {
 			"UC Berkeley / Georgia Tech / UIUC",
 			"ETH Zurich / TU Munich (Europe)",
 			"University of Toronto / UBC (Canada)",
+		},
+		CareerDataScience: {
+			"IIT Madras (BS in Data Science)",
+			"ISI Kolkata / CMI Chennai",
+			"IIT Bombay / Delhi (M.Tech AI/ML)",
+			"IIIT Hyderabad (ML Lab)",
+		},
+		CareerCreative: {
+			"NID Ahmedabad / Bangalore",
+			"NIFT Delhi / Mumbai",
+			"Srishti Manipal Institute of Art",
+			"IDC IIT Bombay (M.Des)",
+		},
+		CareerHealthcare: {
+			"AIIMS Delhi / Jodhpur / Rishikesh",
+			"JIPMER Puducherry",
+			"CMC Vellore / Manipal Academy",
+			"KGMU Lucknow / BHU Varanasi",
 		},
 	}
 

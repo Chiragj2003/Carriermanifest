@@ -27,6 +27,9 @@ const careerColors: Record<string, string> = {
   "Startup / Entrepreneurship": "bg-red-500",
   "Higher Studies (India)": "bg-green-500",
   "MS Abroad": "bg-cyan-500",
+  "Data Science / AI": "bg-indigo-500",
+  "Creative & Design": "bg-pink-500",
+  "Healthcare / Medical": "bg-emerald-500",
 };
 
 // Simple explanations for each career path
@@ -37,6 +40,9 @@ const careerExplanations: Record<string, string> = {
   "Startup / Entrepreneurship": "If you have a business idea and high risk tolerance, entrepreneurship can be very rewarding. It requires patience, creativity, and the ability to handle uncertainty.",
   "Higher Studies (India)": "Pursuing M.Tech, PhD, or specialized courses in India is great if you love research and deep learning. GATE, NET, and other exams open doors to top institutes.",
   "MS Abroad": "Studying abroad (MS in USA/Europe) gives you global exposure, higher salaries, and cutting-edge research opportunities. It requires good GRE/IELTS scores and financial planning.",
+  "Data Science / AI": "Data Science & AI is one of the fastest-growing fields globally. If you love math, statistics, and programming, you can build intelligent systems, work with big data, and earn top-tier salaries at companies like Google, Amazon, and startups.",
+  "Creative & Design": "If you have an eye for aesthetics and love creating visual experiences, a career in UI/UX design, graphic design, animation, or branding could be perfect. The creative industry is booming with opportunities in tech companies, agencies, and freelancing.",
+  "Healthcare / Medical": "Healthcare offers a noble, stable, and rewarding career. If you're passionate about biology and helping people, paths like MBBS, dentistry, pharmacy, or public health provide lifelong job security and social respect.",
 };
 
 export default function ResultPage() {
@@ -224,7 +230,7 @@ export default function ResultPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
               {[
                 { label: "Academic Strength", value: result.profile.academic_strength, color: "bg-blue-500" },
                 { label: "Tech Affinity", value: result.profile.tech_affinity, color: "bg-cyan-500" },
@@ -236,7 +242,7 @@ export default function ResultPage() {
                 { label: "Income Urgency", value: result.profile.income_urgency, color: "bg-rose-500" },
                 { label: "Career Instability", value: result.profile.career_instability, color: "bg-gray-500" },
               ].map((feat) => (
-                <div key={feat.label} className="text-center p-3 rounded-lg bg-muted/50">
+                <div key={feat.label} className="text-center p-2 sm:p-3 rounded-lg bg-muted/50">
                   <p className="text-xs text-muted-foreground mb-1">{feat.label}</p>
                   <div className="w-full h-2 bg-muted rounded-full mb-1">
                     <div
@@ -276,16 +282,16 @@ export default function ResultPage() {
                     .slice(0, 4)
                     .map((f) => (
                       <div key={f.feature} className="flex items-center gap-3">
-                        <span className="text-xs text-muted-foreground w-32 sm:w-40 truncate">
+                        <span className="text-xs text-muted-foreground w-24 sm:w-40 truncate flex-shrink-0">
                           {f.feature}
                         </span>
-                        <div className="flex-1 h-2 bg-muted rounded-full">
+                        <div className="flex-1 h-2 bg-muted rounded-full min-w-[40px]">
                           <div
                             className="h-2 rounded-full bg-green-500"
                             style={{ width: `${Math.min(f.percentage, 100)}%` }}
                           />
                         </div>
-                        <span className="text-xs font-medium w-12 text-right text-green-600 dark:text-green-400">
+                        <span className="text-xs font-medium w-10 sm:w-12 text-right text-green-600 dark:text-green-400 flex-shrink-0">
                           +{f.percentage.toFixed(0)}%
                         </span>
                       </div>
@@ -295,16 +301,16 @@ export default function ResultPage() {
                     .slice(0, 2)
                     .map((f) => (
                       <div key={f.feature} className="flex items-center gap-3 opacity-70">
-                        <span className="text-xs text-muted-foreground w-32 sm:w-40 truncate">
+                        <span className="text-xs text-muted-foreground w-24 sm:w-40 truncate flex-shrink-0">
                           {f.feature}
                         </span>
-                        <div className="flex-1 h-2 bg-muted rounded-full">
+                        <div className="flex-1 h-2 bg-muted rounded-full min-w-[40px]">
                           <div
                             className="h-2 rounded-full bg-red-400"
                             style={{ width: `${Math.min(Math.abs(f.percentage || (f.contribution * 100)), 100)}%` }}
                           />
                         </div>
-                        <span className="text-xs font-medium w-12 text-right text-red-500">
+                        <span className="text-xs font-medium w-10 sm:w-12 text-right text-red-500 flex-shrink-0">
                           drag
                         </span>
                       </div>
@@ -328,7 +334,7 @@ export default function ResultPage() {
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>📊 Career Score Summary</CardTitle>
-          <CardDescription>How you scored across all 6 career categories. Higher % = better fit for you.</CardDescription>
+          <CardDescription>How you scored across all 9 career categories. Higher % = better fit for you.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {result.scores.map((score, idx) => (
@@ -407,7 +413,7 @@ export default function ResultPage() {
           <CardDescription>Expected salary growth for {result.best_career_path} (in Indian Rupees). These are average figures — your actual salary may vary based on skills and location.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 md:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 md:gap-4">
             {[
               { year: "Year 1", salary: result.salary_projection.year_1 },
               { year: "Year 2", salary: result.salary_projection.year_2 },
@@ -526,7 +532,7 @@ export default function ResultPage() {
           ═══════════════════════════════════════════════════ */}
       <div className="mb-4 mt-12">
         <div className="inline-block px-3 py-1 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 text-xs font-medium border border-purple-500/20 mb-4">
-          🤖 AI-Powered Analysis — Enhanced by Llama3-70B
+          🤖 AI-Powered Analysis — Enhanced by Llama 3.3
         </div>
       </div>
 
@@ -537,7 +543,7 @@ export default function ResultPage() {
               🤖 Personalized AI Career Analysis
             </CardTitle>
             <CardDescription>
-              Our AI (Llama3-70B) analyzed your scores and created a personalized career plan just for you.
+              Our AI (Llama 3.3-70B) analyzed your scores and created a personalized career plan just for you.
               This includes a detailed preparation plan with monthly milestones.
             </CardDescription>
           </CardHeader>
@@ -613,9 +619,9 @@ export default function ResultPage() {
 
       {/* Chat panel */}
       {chatOpen && (
-        <div className="fixed bottom-6 right-6 w-[90vw] sm:w-[400px] h-[500px] bg-background border rounded-2xl shadow-2xl flex flex-col z-50">
+        <div className="fixed bottom-0 right-0 w-full h-[85vh] sm:bottom-6 sm:right-6 sm:w-[400px] sm:h-[500px] sm:rounded-2xl bg-background border rounded-t-2xl shadow-2xl flex flex-col z-50">
           {/* Chat header */}
-          <div className="flex items-center justify-between p-4 border-b bg-primary/5 rounded-t-2xl">
+          <div className="flex items-center justify-between p-4 border-b bg-primary/5 rounded-t-2xl safe-area-top">
             <div className="flex items-center gap-2">
               <span className="text-xl">🤖</span>
               <div>

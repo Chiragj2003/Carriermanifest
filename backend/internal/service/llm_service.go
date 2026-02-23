@@ -26,7 +26,7 @@ func NewLLMService(cfg *config.Config) *LLMService {
 	return &LLMService{
 		cfg: cfg,
 		client: &http.Client{
-			Timeout: 30 * time.Second,
+			Timeout: 60 * time.Second,
 		},
 	}
 }
@@ -103,6 +103,11 @@ func (s *LLMService) callGroq(prompt string) (string, error) {
 	defer resp.Body.Close()
 
 	respBody, _ := io.ReadAll(resp.Body)
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("groq API returned status %d: %s", resp.StatusCode, string(respBody))
+	}
+
 	var result struct {
 		Choices []struct {
 			Message struct {
@@ -192,10 +197,10 @@ Follow the preparation roadmap provided below. Focus on building the required sk
 // Chat handles a free-form chat question in the context of a career assessment result.
 func (s *LLMService) Chat(message string, result *dto.AssessmentResult) (string, error) {
 	if !s.IsEnabled() {
-		return "AI chatbot is not enabled. Please contact the administrator to enable the AI module.", nil
+		return s.generateTemplateChatResponse(message, result), nil
 	}
 
-	prompt := fmt.Sprintf(`You are a career counselor chatbot for Indian students. The student has completed a career assessment.
+	prompt := fmt.Sprintf(`You are a friendly, knowledgeable career counselor chatbot for Indian students. The student has completed a career assessment on CareerManifest.
 
 Their assessment results:
 - Best Career Path: %s
@@ -204,8 +209,9 @@ Their assessment results:
 
 The student is asking: "%s"
 
-Provide a helpful, concise, and encouraging response. Keep it under 200 words.
+Provide a helpful, concise, and encouraging response. Keep it under 250 words.
 Focus on actionable Indian-specific advice (exams, colleges, salary in INR, timeline).
+Use bullet points for clarity. Be warm and supportive.
 If the question is unrelated to career/education, gently redirect them.`,
 		result.BestCareerPath,
 		result.Risk.Level, result.Risk.Score,
@@ -214,13 +220,44 @@ If the question is unrelated to career/education, gently redirect them.`,
 		message,
 	)
 
+	var reply string
+	var err error
 	switch strings.ToLower(s.cfg.LLMProvider) {
 	case "groq":
-		return s.callGroq(prompt)
+		reply, err = s.callGroq(prompt)
 	case "claude":
-		return s.callClaude(prompt)
+		reply, err = s.callClaude(prompt)
 	default:
-		return "AI chatbot requires a configured LLM provider.", nil
+		return s.generateTemplateChatResponse(message, result), nil
+	}
+
+	// Fallback to template if AI fails
+	if err != nil {
+		return s.generateTemplateChatResponse(message, result), nil
+	}
+	return reply, nil
+}
+
+// generateTemplateChatResponse produces a helpful response without LLM.
+func (s *LLMService) generateTemplateChatResponse(message string, result *dto.AssessmentResult) string {
+	lowerMsg := strings.ToLower(message)
+	career := result.BestCareerPath
+
+	switch {
+	case strings.Contains(lowerMsg, "exam") || strings.Contains(lowerMsg, "prepare"):
+		return fmt.Sprintf("For %s, here are the key exams you should focus on:\n\nYour top career match is %s with a %.0f%% compatibility score. Check the 'Exams to Prepare For' section in your results above for specific exam recommendations. The preparation roadmap also has a step-by-step timeline.\n\nWould you like to know more about a specific exam?", career, career, result.Scores[0].Percentage)
+	case strings.Contains(lowerMsg, "salary") || strings.Contains(lowerMsg, "earning") || strings.Contains(lowerMsg, "pay") || strings.Contains(lowerMsg, "money"):
+		return fmt.Sprintf("Great question about earnings! Check the '5-Year Salary Projection' section in your results above for detailed year-by-year salary expectations for %s.\n\nRemember, actual salaries depend on your skills, location, and the specific company/role. The figures shown are average ranges for Indian professionals.", career)
+	case strings.Contains(lowerMsg, "college") || strings.Contains(lowerMsg, "university") || strings.Contains(lowerMsg, "institute"):
+		return fmt.Sprintf("For %s, see the 'Suggested Institutions' section in your results above for top recommended colleges.\n\nI'd recommend researching each institution's placement records, faculty, and alumni network to find the best fit for you.", career)
+	case strings.Contains(lowerMsg, "risk") || strings.Contains(lowerMsg, "safe"):
+		return fmt.Sprintf("Your risk level is %s (Score: %.1f/10).\n\n%s\n\nCheck the Risk Assessment section above for a detailed breakdown of the factors.", result.Risk.Level, result.Risk.Score, getRiskExplanation(result.Risk.Level))
+	case strings.Contains(lowerMsg, "skill") || strings.Contains(lowerMsg, "learn"):
+		return fmt.Sprintf("For %s, check the 'Skills You Need' section in your results above.\n\nI recommend starting with the most fundamental skills first, then building up to advanced ones. The preparation roadmap gives you a timeline for when to learn each skill.", career)
+	case strings.Contains(lowerMsg, "start") || strings.Contains(lowerMsg, "begin") || strings.Contains(lowerMsg, "next step") || strings.Contains(lowerMsg, "today"):
+		return fmt.Sprintf("Here's how to start your journey towards %s:\n\n1. Check the Preparation Roadmap in your results — it has a step-by-step plan\n2. Start with Step 1 today\n3. Build the skills listed in 'Skills You Need'\n4. Register for the exams listed in your results\n\nConsistency is key. Even 1-2 hours daily can make a huge difference over 6-12 months!", career)
+	default:
+		return fmt.Sprintf("Thanks for your question! Based on your assessment, %s is your best career match with %.0f%% compatibility.\n\nYour results page above has detailed information about:\n• 📊 Score breakdown across all careers\n• 🗺️ Step-by-step preparation roadmap\n• 🛠️ Skills you need to build\n• 📝 Exams to prepare for\n• 🏫 Suggested institutions\n• 💰 Salary projections\n\nFeel free to ask about any specific topic!", career, result.Scores[0].Percentage)
 	}
 }
 

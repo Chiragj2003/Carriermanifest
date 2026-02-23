@@ -106,6 +106,30 @@ var riskPenaltyRules = []careerPenaltyRule{
 		Penalty:   0.10,
 		Reason:    "High risk appetite may lead to dissatisfaction with govt job security",
 	},
+	{
+		Career:    CareerCreative,
+		Condition: func(p *UserProfile) bool { return p.FinancialPressure() > 0.7 },
+		Penalty:   0.15,
+		Reason:    "High financial pressure makes freelance/creative career risky",
+	},
+	{
+		Career:    CareerCreative,
+		Condition: func(p *UserProfile) bool { return p.IncomeUrgency() > 0.7 },
+		Penalty:   0.10,
+		Reason:    "Urgent income need conflicts with creative career ramp-up",
+	},
+	{
+		Career:    CareerHealthcare,
+		Condition: func(p *UserProfile) bool { return p.IncomeUrgency() > 0.7 },
+		Penalty:   0.20,
+		Reason:    "Urgent income need conflicts with long medical training (5.5+ years)",
+	},
+	{
+		Career:    CareerHealthcare,
+		Condition: func(p *UserProfile) bool { return p.RiskTolerance() > 0.8 },
+		Penalty:   0.08,
+		Reason:    "High risk appetite may lead to dissatisfaction with structured medical career",
+	},
 }
 
 // RiskPenalty holds the penalty information applied to a career.
