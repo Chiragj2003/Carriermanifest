@@ -99,6 +99,9 @@ export interface VersionInfo {
   assessment: string;
   weight_matrix: string;
   feature_map: string;
+  model_type: string;
+  model_accuracy: number;
+  model_f1_score: number;
 }
 
 export interface AssessmentResult {

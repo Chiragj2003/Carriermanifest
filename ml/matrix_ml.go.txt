@@ -1,0 +1,23 @@
+// CareerWeightMatrix — ML-optimized via Random_Forest
+// Training accuracy: 0.8845, F1: 0.8844
+// Features: academic_strength, financial_pressure, risk_tolerance, leadership_score, tech_affinity, govt_interest, abroad_interest, income_urgency, career_instability
+//
+// Derived from 10,000 synthetic student profiles using:
+//   - Random Forest, XGBoost, SVM, Neural Network, Logistic Regression
+//   - Methodology from Kaggle career prediction research
+//   - Indian student career landscape distributions
+
+var CareerWeightMatrix = [NumCareers][NumFeatures]float64{
+	// CareerIT — IT / Software Jobs
+	{ -0.03,  -0.01,   0.03,  -0.16,   0.59,  -0.16,   0.06,   0.06,   0.01},
+	// CareerMBA — MBA (India)
+	{ -0.11,  -0.05,   0.10,   0.48,  -0.39,  -0.21,  -0.01,   0.02,  -0.00},
+	// CareerGovt — Government Exams
+	{ -0.10,   0.07,  -0.38,  -0.14,  -0.40,   0.95,  -0.42,   0.10,  -0.17},
+	// CareerStartup — Startup / Entrepreneurship
+	{ -0.20,  -0.05,   0.52,   0.37,   0.10,  -0.35,  -0.15,  -0.06,   0.42},
+	// CareerHigherStudies — Higher Studies (India)
+	{  0.32,   0.05,  -0.18,  -0.29,  -0.06,  -0.03,  -0.24,  -0.08,  -0.14},
+	// CareerMSAbroad — MS Abroad
+	{  0.13,  -0.04,   0.02,  -0.16,   0.04,  -0.30,   0.82,  -0.08,  -0.03},
+}

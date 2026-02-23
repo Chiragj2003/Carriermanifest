@@ -25,8 +25,8 @@ type GoogleLoginRequest struct {
 
 // AuthResponse is returned after successful login/register.
 type AuthResponse struct {
-	Token string   `json:"token"`
-	User  UserDTO  `json:"user"`
+	Token string  `json:"token"`
+	User  UserDTO `json:"user"`
 }
 
 // UserDTO is the safe user representation (no password).
@@ -55,26 +55,26 @@ type SubmitAssessmentRequest struct {
 
 // CareerScore holds a score for a specific career category.
 type CareerScore struct {
-	Category    string  `json:"category"`
-	Score       float64 `json:"score"`
-	MaxScore    float64 `json:"max_score"`
-	Percentage  float64 `json:"percentage"`
+	Category   string  `json:"category"`
+	Score      float64 `json:"score"`
+	MaxScore   float64 `json:"max_score"`
+	Percentage float64 `json:"percentage"`
 }
 
 // RiskAssessment holds the risk analysis result.
 type RiskAssessment struct {
-	Score    float64 `json:"score"`
-	Level    string  `json:"level"`    // Low, Medium, High
-	Factors  map[string]float64 `json:"factors"`
+	Score   float64            `json:"score"`
+	Level   string             `json:"level"` // Low, Medium, High
+	Factors map[string]float64 `json:"factors"`
 }
 
 // SalaryProjection holds 5-year salary growth data.
 type SalaryProjection struct {
-	Year1  string `json:"year_1"`
-	Year2  string `json:"year_2"`
-	Year3  string `json:"year_3"`
-	Year4  string `json:"year_4"`
-	Year5  string `json:"year_5"`
+	Year1 string `json:"year_1"`
+	Year2 string `json:"year_2"`
+	Year3 string `json:"year_3"`
+	Year4 string `json:"year_4"`
+	Year5 string `json:"year_5"`
 }
 
 // RoadmapStep is a single step in the preparation roadmap.
@@ -96,10 +96,10 @@ type FeatureContributionDTO struct {
 
 // CareerExplanationDTO holds the deterministic explanation for a career.
 type CareerExplanationDTO struct {
-	Career      string                   `json:"career"`
-	TopFactors  []FeatureContributionDTO `json:"top_factors"`
-	Summary     string                   `json:"summary"`
-	Penalties   []string                 `json:"penalties,omitempty"`
+	Career     string                   `json:"career"`
+	TopFactors []FeatureContributionDTO `json:"top_factors"`
+	Summary    string                   `json:"summary"`
+	Penalties  []string                 `json:"penalties,omitempty"`
 }
 
 // UserProfileDTO represents the aggregated feature profile of the user.
@@ -115,11 +115,14 @@ type UserProfileDTO struct {
 	CareerInstability float64 `json:"career_instability"`
 }
 
-// VersionInfo holds version metadata for reproducibility.
+// VersionInfo holds version metadata for reproducibility and ML provenance.
 type VersionInfo struct {
-	Assessment  string `json:"assessment"`
-	WeightMatrix string `json:"weight_matrix"`
-	FeatureMap  string `json:"feature_map"`
+	Assessment    string  `json:"assessment"`
+	WeightMatrix  string  `json:"weight_matrix"`
+	FeatureMap    string  `json:"feature_map"`
+	ModelType     string  `json:"model_type"`
+	ModelAccuracy float64 `json:"model_accuracy"`
+	ModelF1Score  float64 `json:"model_f1_score"`
 }
 
 // AssessmentResult is the full computed result.

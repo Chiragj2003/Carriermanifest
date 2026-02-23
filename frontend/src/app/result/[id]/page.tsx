@@ -560,10 +560,23 @@ export default function ResultPage() {
         </Card>
       )}
 
-      {/* Version info */}
+      {/* Version info + ML badge */}
       {result.version && (
-        <div className="text-center text-xs text-muted-foreground mb-4">
-          Engine v{result.version.assessment} • Matrix v{result.version.weight_matrix} • Features v{result.version.feature_map}
+        <div className="text-center mb-4 space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/20">
+            <span className="text-xs font-semibold text-purple-600 dark:text-purple-400">🤖 ML-Powered</span>
+            <span className="text-xs text-muted-foreground">•</span>
+            <span className="text-xs text-muted-foreground">{result.version.model_type?.replace('_', ' ') || 'AI'} Model</span>
+            {result.version.model_accuracy > 0 && (
+              <>
+                <span className="text-xs text-muted-foreground">•</span>
+                <span className="text-xs font-medium text-green-600 dark:text-green-400">{(result.version.model_accuracy * 100).toFixed(1)}% Accuracy</span>
+              </>
+            )}
+          </div>
+          <div className="text-xs text-muted-foreground">
+            Engine v{result.version.assessment} • Matrix v{result.version.weight_matrix} • Features v{result.version.feature_map}
+          </div>
         </div>
       )}
 

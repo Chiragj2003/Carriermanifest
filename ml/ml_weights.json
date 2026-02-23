@@ -1,0 +1,155 @@
+{
+  "version": "3.0.0-ml",
+  "model_type": "Random_Forest",
+  "accuracy": 0.8845,
+  "f1_weighted": 0.8844067698589337,
+  "cv_f1_mean": 0.8868773628133118,
+  "cv_f1_std": 0.007587808100630559,
+  "feature_names": [
+    "academic_strength",
+    "financial_pressure",
+    "risk_tolerance",
+    "leadership_score",
+    "tech_affinity",
+    "govt_interest",
+    "abroad_interest",
+    "income_urgency",
+    "career_instability"
+  ],
+  "career_labels": [
+    "IT / Software Jobs",
+    "MBA (India)",
+    "Government Exams",
+    "Startup / Entrepreneurship",
+    "Higher Studies (India)",
+    "MS Abroad"
+  ],
+  "weight_matrix": [
+    [
+      -0.03,
+      -0.01,
+      0.03,
+      -0.16,
+      0.59,
+      -0.16,
+      0.06,
+      0.06,
+      0.01
+    ],
+    [
+      -0.11,
+      -0.05,
+      0.1,
+      0.48,
+      -0.39,
+      -0.21,
+      -0.01,
+      0.02,
+      -0.0
+    ],
+    [
+      -0.1,
+      0.07,
+      -0.38,
+      -0.14,
+      -0.4,
+      0.95,
+      -0.42,
+      0.1,
+      -0.17
+    ],
+    [
+      -0.2,
+      -0.05,
+      0.52,
+      0.37,
+      0.1,
+      -0.35,
+      -0.15,
+      -0.06,
+      0.42
+    ],
+    [
+      0.32,
+      0.05,
+      -0.18,
+      -0.29,
+      -0.06,
+      -0.03,
+      -0.24,
+      -0.08,
+      -0.14
+    ],
+    [
+      0.13,
+      -0.04,
+      0.02,
+      -0.16,
+      0.04,
+      -0.3,
+      0.82,
+      -0.08,
+      -0.03
+    ]
+  ],
+  "feature_importances": {
+    "academic_strength": 0.07607284764426601,
+    "financial_pressure": 0.018435137082993932,
+    "risk_tolerance": 0.11533454371143724,
+    "leadership_score": 0.13637163584461934,
+    "tech_affinity": 0.14211918803418397,
+    "govt_interest": 0.18820005046870966,
+    "abroad_interest": 0.1718428219718784,
+    "income_urgency": 0.02632462545641874,
+    "career_instability": 0.12529914978549292
+  },
+  "feature_importance_ranking": [
+    "govt_interest",
+    "abroad_interest",
+    "tech_affinity",
+    "leadership_score",
+    "career_instability",
+    "risk_tolerance",
+    "academic_strength",
+    "income_urgency",
+    "financial_pressure"
+  ],
+  "go_code": "// CareerWeightMatrix \u2014 ML-optimized via Random_Forest\n// Training accuracy: 0.8845, F1: 0.8844\n// Features: academic_strength, financial_pressure, risk_tolerance, leadership_score, tech_affinity, govt_interest, abroad_interest, income_urgency, career_instability\n//\n// Derived from 10,000 synthetic student profiles using:\n//   - Random Forest, XGBoost, SVM, Neural Network, Logistic Regression\n//   - Methodology from Kaggle career prediction research\n//   - Indian student career landscape distributions\n\nvar CareerWeightMatrix = [NumCareers][NumFeatures]float64{\n\t// CareerIT \u2014 IT / Software Jobs\n\t{ -0.03,  -0.01,   0.03,  -0.16,   0.59,  -0.16,   0.06,   0.06,   0.01},\n\t// CareerMBA \u2014 MBA (India)\n\t{ -0.11,  -0.05,   0.10,   0.48,  -0.39,  -0.21,  -0.01,   0.02,  -0.00},\n\t// CareerGovt \u2014 Government Exams\n\t{ -0.10,   0.07,  -0.38,  -0.14,  -0.40,   0.95,  -0.42,   0.10,  -0.17},\n\t// CareerStartup \u2014 Startup / Entrepreneurship\n\t{ -0.20,  -0.05,   0.52,   0.37,   0.10,  -0.35,  -0.15,  -0.06,   0.42},\n\t// CareerHigherStudies \u2014 Higher Studies (India)\n\t{  0.32,   0.05,  -0.18,  -0.29,  -0.06,  -0.03,  -0.24,  -0.08,  -0.14},\n\t// CareerMSAbroad \u2014 MS Abroad\n\t{  0.13,  -0.04,   0.02,  -0.16,   0.04,  -0.30,   0.82,  -0.08,  -0.03},\n}",
+  "model_comparison": {
+    "Random_Forest": {
+      "accuracy": 0.8845,
+      "f1_weighted": 0.8844067698589337,
+      "precision": 0.8847204633616604,
+      "recall": 0.8845,
+      "cv_f1_mean": 0.8868773628133118
+    },
+    "Gradient_Boosting": {
+      "accuracy": 0.87,
+      "f1_weighted": 0.8696858003590711,
+      "precision": 0.869687048281767,
+      "recall": 0.87,
+      "cv_f1_mean": 0.8814098224915208
+    },
+    "Logistic_Regression": {
+      "accuracy": 0.8575,
+      "f1_weighted": 0.8584038235550298,
+      "precision": 0.8640343959765078,
+      "recall": 0.8575,
+      "cv_f1_mean": 0.8706291664722207
+    },
+    "SVM_RBF": {
+      "accuracy": 0.8775,
+      "f1_weighted": 0.8779150524645626,
+      "precision": 0.8804095866574811,
+      "recall": 0.8775,
+      "cv_f1_mean": 0.8788523023068553
+    },
+    "Neural_Network": {
+      "accuracy": 0.882,
+      "f1_weighted": 0.8815820248712518,
+      "precision": 0.8817690271909157,
+      "recall": 0.882,
+      "cv_f1_mean": 0.8853169980312549
+    }
+  }
+}

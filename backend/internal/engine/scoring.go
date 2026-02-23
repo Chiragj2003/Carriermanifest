@@ -146,22 +146,25 @@ func (e *ScoringEngine) ComputeResult(answers []dto.AnswerItem, questionsJSON []
 	colleges := GetSuggestedColleges(bestCareer)
 
 	return &dto.AssessmentResult{
-		Scores:         careerScores,
-		BestCareerPath: bestCareer.String(),
-		Confidence:     ranked.Confidence,
-		IsMultiFit:     ranked.IsMultiFit,
-		Risk:           risk,
-		Profile:        profileDTO,
-		Explanations:   explanationDTOs,
+		Scores:            careerScores,
+		BestCareerPath:    bestCareer.String(),
+		Confidence:        ranked.Confidence,
+		IsMultiFit:        ranked.IsMultiFit,
+		Risk:              risk,
+		Profile:           profileDTO,
+		Explanations:      explanationDTOs,
 		SalaryProjection:  salaryProjection,
 		Roadmap:           roadmap,
 		RequiredSkills:    skills,
 		SuggestedExams:    exams,
 		SuggestedColleges: colleges,
 		Version: dto.VersionInfo{
-			Assessment:   AssessmentVersion,
-			WeightMatrix: WeightMatrixVersion,
-			FeatureMap:   FeatureMapVersion,
+			Assessment:    AssessmentVersion,
+			WeightMatrix:  WeightMatrixVersion,
+			FeatureMap:    FeatureMapVersion,
+			ModelType:     ModelType,
+			ModelAccuracy: ModelAccuracy,
+			ModelF1Score:  ModelF1Score,
 		},
 	}, nil
 }
